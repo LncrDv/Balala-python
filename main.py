@@ -1,6 +1,6 @@
 import pygame as pg
 from ui import showUI
-
+import gameManager
 
 def getEvents():
 
