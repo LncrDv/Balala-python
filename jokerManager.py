@@ -1,5 +1,6 @@
 from jokers import *
 import random
+
 equippedJokers = []
 
 def generateRandomJokers(n):
@@ -12,7 +13,5 @@ def generateRandomJokers(n):
         print("Equipped Joker : ", joker.name)
 
 #10.66 jokers at 2.5x scale fit in the screen
-#generateRandomJokers(5)
+generateRandomJokers(5)
 
-def generate52CardDeck():
-    pass

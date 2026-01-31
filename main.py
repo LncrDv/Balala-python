@@ -1,8 +1,8 @@
 import pygame as pg
-from ui import showUI
-import gameManager
+from ui import ShowUI
+import jokerManager
 
-def getEvents():
+def GetEvents():
 
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -12,5 +12,5 @@ def getEvents():
 
 running = True
 while running:
-    getEvents()
-    showUI()
+    GetEvents()
+    ShowUI()
