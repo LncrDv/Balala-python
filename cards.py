@@ -25,6 +25,7 @@ CARD_BG_ATLAS =SpriteAtlas(CARD_BG_IMAGE, CARD_W, CARD_H)
 
 ENHANCEMENT_TO_ATLASCOORDS = {
     "None":(1,0),
+    "FaceDown":(0,0),
     "Stone":(5,0),
     "Gold":(6,0),
     "Chips":(1,1),
@@ -41,8 +42,10 @@ SEAL_TO_ATLASCOORDS = {
     "RedSeal":(5,4),
     "BlueSeal":(6,4)
 }
-ENHANCEMENT_OVERLAYS = ["Stone"]
-def valueAndSuitToAtlasCoords(value, suit):
+ENHANCEMENT_OVERLAYS = ["Stone","FaceDown"]
+ENHANCEMENT_NO_SEAL = ["FaceDown"]
+
+def ValueAndSuitToAtlasCoords(value, suit):
     valueToAtlas = 0
     suitToAtlas = 0
     match value:
