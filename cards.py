@@ -19,11 +19,11 @@ class SpriteAtlas:
 CARD_W = 71
 CARD_H = 95
 CARD_SCALE = 2.5
+
 CARD_ATLAS = SpriteAtlas(CARD_ATLAS_IMAGE, CARD_W, CARD_H)
 CARD_BG_ATLAS =SpriteAtlas(CARD_BG_IMAGE, CARD_W, CARD_H)
 
 ENHANCEMENT_TO_ATLASCOORDS = {
-    "FaceDown":(0,0),
     "None":(1,0),
     "Stone":(5,0),
     "Gold":(6,0),
@@ -33,8 +33,15 @@ ENHANCEMENT_TO_ATLASCOORDS = {
     "Lucky":(4,1),
     "Glass":(5,1),
     "Steel":(6,1)
-    }
-
+}
+SEAL_TO_ATLASCOORDS = {
+    "None":None,
+    "GoldSeal":(2,0),
+    "PurpleSeal":(4,4),
+    "RedSeal":(5,4),
+    "BlueSeal":(6,4)
+}
+ENHANCEMENT_OVERLAYS = ["Stone"]
 def valueAndSuitToAtlasCoords(value, suit):
     valueToAtlas = 0
     suitToAtlas = 0
@@ -89,21 +96,24 @@ class Card:
     enhancement : str
     seal : str
     #sticker : str
+    debuffed : bool
 
-    def __init__(self, _value, _suit, _edition, _enhancement, _seal, _sticker):
+    def __init__(self, _value, _suit, _edition, _enhancement, _seal, _sticker, _debuffed):
         self.value = _value
         self.suit = _suit
         self.edition = _edition
         self.enhancement = _enhancement
         self.seal = _seal
         #self.sticker = _sticker
+        self.debuffed = _debuffed
 
     def describe(self):
         print(
             "\nName : ",self.value,"of",self.suit,
             "\nEdition : ",self.edition,
             "\nEnhancement : ",self.enhancement,
-            "\nSeal : ",self.seal
-            #"\nSticker : ",self.sticker
+            "\nSeal : ",self.seal,
+            #"\nSticker : ",self.sticker,
+            "\nDebuffed : ",self.debuffed
             )
         

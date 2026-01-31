@@ -20,3 +20,8 @@ def scale_surface(surface, window_size):
 
 def centerObject(objectIndex, numberOfObjects, objectWidth, padding, screenWidth):
     return (screenWidth - (numberOfObjects*objectWidth + (numberOfObjects-1)*padding)) / 2 + objectIndex*(objectWidth + padding)
+
+def EmptyImage(width, height):
+    surf = pg.Surface((width, height), pg.SRCALPHA)
+    surf.fill((0,0,0,0))
+    return surf

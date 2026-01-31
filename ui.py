@@ -15,18 +15,47 @@ clock = pg.time.Clock()
 def DrawCard(card : Card, slot):
     #set the image to corresponding atlas coords
     card_tex_coords = valueAndSuitToAtlasCoords(card.value, card.suit)
-    image_bg_card = CARD_BG_ATLAS.get(*ENHANCEMENT_TO_ATLASCOORDS[card.enhancement]) #Bg first
-    image_card = CARD_ATLAS.get(*card_tex_coords)   #Then number
-    #Then enhancement
-    #Then edition
-    #Then debuff if needed
-    
-    #scale it 
-    image_bg_card = pg.transform.smoothscale_by(image_bg_card, CARD_SCALE)
-    image_card = pg.transform.smoothscale_by(image_card, CARD_SCALE)
 
-    screen.blit(image_bg_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
+    #Enhancement in background first
+    if not card.enhancement in ENHANCEMENT_OVERLAYS:
+        #Check if card enhancement is not considered an overlay
+        image_enh_bg_card = CARD_BG_ATLAS.get(*ENHANCEMENT_TO_ATLASCOORDS[card.enhancement])
+    else:
+        image_enh_bg_card = EmptyImage(CARD_W, CARD_H)
+
+    #Then number
+    image_card = CARD_ATLAS.get(*card_tex_coords)
+
+    #Then enhancement in overlay
+    if card.enhancement in ENHANCEMENT_OVERLAYS:
+        image_enh_over_card = CARD_BG_ATLAS.get(*ENHANCEMENT_TO_ATLASCOORDS[card.enhancement])
+    else:
+        image_enh_over_card = EmptyImage(CARD_W, CARD_H)
+    #Then edition
+
+    #Then seal
+    if card.seal is not "None":
+        image_card_seal = CARD_BG_ATLAS.get(*SEAL_TO_ATLASCOORDS[card.seal])
+    else:
+        image_card_seal = EmptyImage(CARD_W, CARD_H)
+
+    #Then debuff if needed
+    if card.debuffed:
+        image_card_debuff = CARD_BG_ATLAS.get(7,0)
+    else:
+        image_card_debuff = EmptyImage(CARD_W, CARD_H)
+    #scale it 
+    image_enh_bg_card = pg.transform.smoothscale_by(image_enh_bg_card, CARD_SCALE)
+    image_card = pg.transform.smoothscale_by(image_card, CARD_SCALE)
+    image_enh_over_card = pg.transform.smoothscale_by(image_enh_over_card, CARD_SCALE)
+    image_card_seal = pg.transform.smoothscale_by(image_card_seal, CARD_SCALE)
+    image_card_debuff = pg.transform.smoothscale_by(image_card_debuff, CARD_SCALE)
+
+    screen.blit(image_enh_bg_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
     screen.blit(image_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
+    screen.blit(image_enh_over_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
+    screen.blit(image_card_seal, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
+    screen.blit(image_card_debuff, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
     
 def DrawHand(_handSize):
     for i in range(_handSize):

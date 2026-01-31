@@ -1,5 +1,5 @@
-from cards import Card, ENHANCEMENT_TO_ATLASCOORDS
-from random import shuffle, choice
+from cards import Card, ENHANCEMENT_TO_ATLASCOORDS, SEAL_TO_ATLASCOORDS
+from random import shuffle, choice, randint
 full_deck = []
 handSize = 7
 def create52CardDeck():
@@ -11,6 +11,14 @@ def create52CardDeck():
 
     for suit in suits:
         for value in values:
-            full_deck.append(Card(value, suit, "None", choice(list(ENHANCEMENT_TO_ATLASCOORDS.keys())), "None", "None"))
+            full_deck.append(Card(
+                value,
+                suit,
+                "None",
+                choice(list(ENHANCEMENT_TO_ATLASCOORDS.keys())),
+                choice(list(SEAL_TO_ATLASCOORDS.keys())),
+                "None",
+                bool(randint(0,1))
+                ))
 
     full_deck.reverse()
