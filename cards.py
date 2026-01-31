@@ -24,7 +24,16 @@ CARD_BG_ATLAS =SpriteAtlas(CARD_BG_IMAGE, CARD_W, CARD_H)
 
 ENHANCEMENT_TO_ATLASCOORDS = {
     "FaceDown":(0,0),
-    "None":(1,0)}
+    "None":(1,0),
+    "Stone":(5,0),
+    "Gold":(6,0),
+    "Chips":(1,1),
+    "Mult":(2,1),
+    "Wild":(3,1),
+    "Lucky":(4,1),
+    "Glass":(5,1),
+    "Steel":(6,1)
+    }
 
 def valueAndSuitToAtlasCoords(value, suit):
     valueToAtlas = 0

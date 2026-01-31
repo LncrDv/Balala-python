@@ -1,6 +1,6 @@
 import pygame as pg
 from ui import ShowUI
-import jokerManager
+import jokerManager, deckManager
 
 def GetEvents():
 
@@ -8,7 +8,9 @@ def GetEvents():
         if event.type == pg.QUIT:
             pg.quit()
             exit()
-
+#10.66 jokers at 2.5x scale fit in the screen
+jokerManager.generateRandomJokers(5)
+deckManager.create52CardDeck()
 
 running = True
 while running:

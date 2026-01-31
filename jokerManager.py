@@ -12,6 +12,6 @@ def generateRandomJokers(n):
     for joker in equippedJokers:
         print("Equipped Joker : ", joker.name)
 
-#10.66 jokers at 2.5x scale fit in the screen
-generateRandomJokers(5)
+    
+
 
