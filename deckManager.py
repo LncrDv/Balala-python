@@ -1,7 +1,7 @@
 from cards import Card, ENHANCEMENT_TO_ATLASCOORDS, SEAL_TO_ATLASCOORDS
 from random import shuffle, choice, randint
 full_deck = []
-handSize = 7
+
 def create52CardDeck():
     global full_deck
     full_deck = []

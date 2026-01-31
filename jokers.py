@@ -31,7 +31,12 @@ class Joker:
         self.modifiers = _modifiers
     
     def describe(self):
-        print(f"Name : {self.name}\nTexture Coords : {self.textureCoords}\nModifiers : {self.modifiers}\n-\n")
+        print
+        (
+            "\nName : ",self.name,
+            "\nTexture Coords : ",self.textureCoords,
+            "\nModifiers : ",self.modifiers
+        )
 
 #Example of a Joker
 #joker_jimbo = Joker("Jimbo",(0,0),{"plusMult" : 4})

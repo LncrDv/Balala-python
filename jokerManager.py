@@ -11,7 +11,3 @@ def generateRandomJokers(n):
 
     for joker in equippedJokers:
         print("Equipped Joker : ", joker.name)
-
-    
-
-

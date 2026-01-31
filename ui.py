@@ -2,15 +2,30 @@ import pygame as pg
 from jokers import *
 from cards import *
 from helper import *
-import jokerManager, deckManager
+import jokerManager, deckManager, handManager
 
 #Default lines to show a window with pygame
 pg.init()
 
 #Resizable window logic
-window = pg.display.set_mode((1280, 720), pg.RESIZABLE)
-screen = pg.Surface((1920,1080))
+DEFAULT_WINDOW_SIZE_X = 1280
+DEFAULT_WINDOW_SIZE_Y = 720
+
+DEFAULT_SCREEN_SIZE_X = 1920
+DEFAULT_SCREEN_SIZE_Y = 1080
+
+window = pg.display.set_mode((DEFAULT_WINDOW_SIZE_X, DEFAULT_WINDOW_SIZE_Y), pg.RESIZABLE)
+screen = pg.Surface((DEFAULT_SCREEN_SIZE_X,DEFAULT_SCREEN_SIZE_Y))
 clock = pg.time.Clock()
+
+scaleX = screen.get_size()[0]/DEFAULT_WINDOW_SIZE_X
+scaleY = screen.get_size()[1]/DEFAULT_WINDOW_SIZE_Y
+
+JOKER_AREA_X = 1000
+CARD_AREA_X = 1500
+CARD_AREA_POS_Y = 800
+
+cardRects = []
 
 def DrawCard(card : Card, slot):
     #set the image to corresponding atlas coords
@@ -54,15 +69,18 @@ def DrawCard(card : Card, slot):
     image_card_debuff = pg.transform.smoothscale_by(image_card_debuff, CARD_SCALE)
 
     #show images
-    screen.blit(image_enh_bg_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
-    screen.blit(image_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
-    screen.blit(image_enh_over_card, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
-    screen.blit(image_card_seal, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
-    screen.blit(image_card_debuff, (centerObject(slot, deckManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width()), 800))
-    
+    cardRect = []
+    cardRect.append(screen.blit(image_enh_bg_card, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
+    cardRect.append(screen.blit(image_card, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
+    cardRect.append(screen.blit(image_enh_over_card, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
+    cardRect.append(screen.blit(image_card_seal, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
+    cardRect.append(screen.blit(image_card_debuff, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
+
+    global cardRects
+    cardRects.append(cardRect)
 def DrawHand(_handSize):
     for i in range(_handSize):
-        DrawCard(deckManager.full_deck[i], i)
+        DrawCard(handManager.currentHand[i], i)
     
 
 def DrawJoker(joker : Joker, slot):
@@ -72,7 +90,7 @@ def DrawJoker(joker : Joker, slot):
     image_joker = pg.transform.smoothscale_by(image_joker, JOKER_SCALE)
 
     #display it centered to the screen
-    screen.blit(image_joker, (centerObject(slot, len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, screen.get_width()), 0))
+    screen.blit(image_joker, (CenterObject(slot, len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, screen.get_width(), JOKER_AREA_X), 0))
 def DrawJokers():
     for i in range(len(jokerManager.equippedJokers)):
         joker = jokerManager.equippedJokers[i]
@@ -83,7 +101,7 @@ def DrawToInternalScreen():
     #Draw to internal screen
     screen.fill((27,112,50))
     DrawJokers()
-    DrawHand(deckManager.handSize)
+    DrawHand(handManager.handSize)
 def ShowUI():
     DrawToInternalScreen()
 

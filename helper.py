@@ -18,8 +18,28 @@ def scale_surface(surface, window_size):
 
     return scaled_surface, (x, y)
 
-def centerObject(objectIndex, numberOfObjects, objectWidth, padding, screenWidth):
-    return (screenWidth - (numberOfObjects*objectWidth + (numberOfObjects-1)*padding)) / 2 + objectIndex*(objectWidth + padding)
+def CenterObject(objectIndex, numberOfObjects, objectWidth, padding, screenWidth, areaWidth):
+    # Total width using desired padding
+    totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * padding
+
+    #If overflow, decrease padding
+    if totalWidth > areaWidth and numberOfObjects > 1:
+        padding = (areaWidth - numberOfObjects * objectWidth) / (numberOfObjects - 1)
+        totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * padding
+
+    #Center cards on screen
+    startX = (screenWidth - totalWidth) / 2
+
+    return startX + objectIndex * (objectWidth + padding)
+
+def CalculatePadding(numberOfObjects, objectWidth, padding, areaWidth):
+
+    totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * padding
+
+    if totalWidth > areaWidth and numberOfObjects > 1:
+        padding = (areaWidth - numberOfObjects * objectWidth) / (numberOfObjects - 1)
+
+    return padding
 
 def EmptyImage(width, height):
     surf = pg.Surface((width, height), pg.SRCALPHA)
