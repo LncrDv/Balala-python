@@ -144,7 +144,6 @@ def DrawJokers():
 #region Score Display
 SCORE_CHIPS_TEXT_SIZE = 50
 SCORE_CHIPS_TEXT_POS = (100, 540+SCORE_CHIPS_TEXT_SIZE)
-
 def CalculateChips():
     chipsScore = 0
     for selectedCardIndex in selectionManager.selectedCards:
@@ -158,9 +157,8 @@ def DrawChipsDisplay():
 
 SCORE_MULT_TEXT_SIZE = 50
 SCORE_MULT_TEXT_POS = (100, 540-SCORE_MULT_TEXT_SIZE)
-
 def CalculateMult():
-    multScore = 0
+    multScore = 1
     for selectedCardIndex in selectionManager.selectedCards:
         selectedCard = handManager.currentHand[selectedCardIndex]
         multScore += selectedCard.mult
@@ -169,14 +167,31 @@ def DrawMultDisplay():
     papyrusFontMult = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_MULT_TEXT_SIZE)
     multText = papyrusFontMult.render(f"Mult : {CalculateMult()}", True, (255,255,255), (128,0,0))
     screen.blit(multText, SCORE_MULT_TEXT_POS)
+
+SCORE_HAND_DISPLAY_TEXT_SIZE = 50
+SCORE_HAND_DISPLAY_TEXT_POS = (100, 540-SCORE_HAND_DISPLAY_TEXT_SIZE*3)
+def CalculateHandScore():
+    handScore = 0
+    handScore = CalculateChips() * CalculateMult()
+    return handScore
+def DrawHandScoreDisplay():
+    papyrusFontHandScore = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_HAND_DISPLAY_TEXT_SIZE)
+    handScoreText = papyrusFontHandScore.render(f"Hand Score : {CalculateHandScore()}", True, (255,255,255), (0,0,0))
+    screen.blit(handScoreText, SCORE_HAND_DISPLAY_TEXT_POS)
+
+
 #endregion
 def DrawToInternalScreen():
     #Draw to internal screen
+    #Black borders
     screen.fill((27,112,50))
+    #Draw cards
     DrawJokers()
     DrawHand(handManager.handSize)
+    #Score
     DrawChipsDisplay()
     DrawMultDisplay()
+    DrawHandScoreDisplay()
 def ShowUI():
     global render_scale, render_offset
 

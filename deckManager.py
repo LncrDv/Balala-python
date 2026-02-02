@@ -11,6 +11,7 @@ def create52CardDeck():
     suits = ["Hearts","Clubs","Diamonds","Spades"]
     values = ["2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace"]
     def_chips_value = [2,3,4,5,6,7,8,9,10,10,10,10,11]
+    def_mult_value = [0,0,0,0,0,0,0,0,0,0,0,0,0]
 
     for suit in suits:
         for value in values:
@@ -23,7 +24,7 @@ def create52CardDeck():
                 "None",
                 bool(randint(0,1)),
                 def_chips_value[values.index(value)],
-                0
+                def_mult_value[values.index(value)]
                 ))
 
 
