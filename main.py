@@ -13,7 +13,7 @@ def GetEvents():
 #10.66 jokers at 2.5x scale fit in the screen
 jokerManager.generateRandomJokers(5)
 deckManager.create52CardDeck()
-handManager.DrawHand()
+handManager.DrawHand(7)
 
 
 running = True

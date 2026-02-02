@@ -1,6 +1,8 @@
 from cards import Card, ENHANCEMENT_TO_ATLASCOORDS, SEAL_TO_ATLASCOORDS
-from random import shuffle, choice, randint
+from random import choice, randint
+
 full_deck = []
+deck_chips_value = []
 
 def create52CardDeck():
     global full_deck
@@ -8,6 +10,7 @@ def create52CardDeck():
     
     suits = ["Hearts","Clubs","Diamonds","Spades"]
     values = ["2","3","4","5","6","7","8","9","10","Jack","Queen","King","Ace"]
+    def_chips_value = [2,3,4,5,6,7,8,9,10,10,10,10,11]
 
     for suit in suits:
         for value in values:
@@ -18,7 +21,11 @@ def create52CardDeck():
                 choice(list(ENHANCEMENT_TO_ATLASCOORDS.keys())),
                 choice(list(SEAL_TO_ATLASCOORDS.keys())),
                 "None",
-                bool(randint(0,1))
+                bool(randint(0,1)),
+                def_chips_value[values.index(value)],
+                0
                 ))
 
+
     full_deck.reverse()
+    print(deck_chips_value)

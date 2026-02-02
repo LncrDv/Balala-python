@@ -100,6 +100,8 @@ class Card:
     seal : str
     #sticker : str
     debuffed : bool
+    chips : int
+    mult : int
 
     @property
     def name(self) -> str:
@@ -108,7 +110,7 @@ class Card:
 
 
 
-    def __init__(self, _value, _suit, _edition, _enhancement, _seal, _sticker, _debuffed):
+    def __init__(self, _value, _suit, _edition, _enhancement, _seal, _sticker, _debuffed, _chips, _mult):
         self.value = _value
         self.suit = _suit
         self.edition = _edition
@@ -117,6 +119,9 @@ class Card:
         #self.sticker = _sticker
         self.debuffed = _debuffed
 
+        self.chips = _chips
+        self.mult = _mult
+
     def describe(self):
         print(
             "\nName : ",self.name,
@@ -124,6 +129,8 @@ class Card:
             "\nEnhancement : ",self.enhancement,
             "\nSeal : ",self.seal,
             #"\nSticker : ",self.sticker,
-            "\nDebuffed : ",self.debuffed
+            "\nDebuffed : ",self.debuffed,
+            "\nChips : ",self.chips,
+            "\nMult : ",self.mult
             )
         

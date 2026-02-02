@@ -1,10 +1,11 @@
 import deckManager, helper
-handSize = 25
+handSize = 9
 
 currentHand = []
 #Drawing Hand logic
 def DrawHand(_handSize = handSize):
-
+    global handSize
+    handSize = _handSize
     global currentHand
 
     for i in range(_handSize):

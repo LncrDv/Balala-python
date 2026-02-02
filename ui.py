@@ -2,7 +2,7 @@ import pygame as pg
 from jokers import *
 from cards import *
 from helper import *
-import jokerManager, deckManager, handManager
+import jokerManager, deckManager, handManager, selectionManager
 
 #Default lines to show a window with pygame
 pg.init()
@@ -21,9 +21,12 @@ clock = pg.time.Clock()
 scaleX = screen.get_size()[0]/DEFAULT_WINDOW_SIZE_X
 scaleY = screen.get_size()[1]/DEFAULT_WINDOW_SIZE_Y
 
-JOKER_AREA_X = 1000
+
+
+#region CardsDrawing
 CARD_AREA_X = 1500
-CARD_AREA_POS_Y = 800
+CARD_AREA_DEFAULT_POS_Y = 800
+CARD_SELECT_OFFSET = -100
 
 cardSelectionRect : list[pg.Rect]
 cardSelectionRect = []
@@ -52,7 +55,7 @@ def CreateCardRects(_slot, *layers):
                     screen.get_width(),
                     CARD_AREA_X
                 ),
-                CARD_AREA_POS_Y + cardYOffset[_slot]
+                CARD_AREA_DEFAULT_POS_Y + cardYOffset[_slot]
             )
         )
     )
@@ -110,7 +113,7 @@ def DrawCard(card : Card, slot):
     cardSelectionRect.append(thisCardRects[0])
 
 def SelectCard(slot):
-    cardYOffset[slot] = -50
+    cardYOffset[slot] = CARD_SELECT_OFFSET
 
 def DeselectCard(slot):
     cardYOffset[slot] = 0
@@ -121,6 +124,9 @@ def DrawHand(_handSize):
     for i in range(_handSize):
         DrawCard(handManager.currentHand[i], i)
     
+#endregion
+#region Jokers
+JOKER_AREA_X = 1000
 
 def DrawJoker(joker : Joker, slot):
     #set the image to corresponding atlas coords
@@ -134,13 +140,43 @@ def DrawJokers():
     for i in range(len(jokerManager.equippedJokers)):
         joker = jokerManager.equippedJokers[i]
         DrawJoker(joker, i)
+#endregion
+#region Score Display
+SCORE_CHIPS_TEXT_SIZE = 50
+SCORE_CHIPS_TEXT_POS = (100, 540+SCORE_CHIPS_TEXT_SIZE)
 
+def CalculateChips():
+    chipsScore = 0
+    for selectedCardIndex in selectionManager.selectedCards:
+        selectedCard = handManager.currentHand[selectedCardIndex]
+        chipsScore += selectedCard.chips
+    return chipsScore
+def DrawChipsDisplay():
+    papyrusFontChips = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_CHIPS_TEXT_SIZE)
+    chipsText = papyrusFontChips.render(f"Chips : {CalculateChips()}", True, (255,255,255), (0,0,128))
+    screen.blit(chipsText, SCORE_CHIPS_TEXT_POS)
 
+SCORE_MULT_TEXT_SIZE = 50
+SCORE_MULT_TEXT_POS = (100, 540-SCORE_MULT_TEXT_SIZE)
+
+def CalculateMult():
+    multScore = 0
+    for selectedCardIndex in selectionManager.selectedCards:
+        selectedCard = handManager.currentHand[selectedCardIndex]
+        multScore += selectedCard.mult
+    return multScore
+def DrawMultDisplay():
+    papyrusFontMult = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_MULT_TEXT_SIZE)
+    multText = papyrusFontMult.render(f"Mult : {CalculateMult()}", True, (255,255,255), (128,0,0))
+    screen.blit(multText, SCORE_MULT_TEXT_POS)
+#endregion
 def DrawToInternalScreen():
     #Draw to internal screen
     screen.fill((27,112,50))
     DrawJokers()
     DrawHand(handManager.handSize)
+    DrawChipsDisplay()
+    DrawMultDisplay()
 def ShowUI():
     global render_scale, render_offset
 
