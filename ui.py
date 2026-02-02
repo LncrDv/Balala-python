@@ -25,7 +25,39 @@ JOKER_AREA_X = 1000
 CARD_AREA_X = 1500
 CARD_AREA_POS_Y = 800
 
-cardRects = []
+cardSelectionRect : list[pg.Rect]
+cardSelectionRect = []
+
+allCardsRects : list[list[pg.Rect]]
+allCardsRects = []
+
+cardYOffset = [0 for _ in range(handManager.handSize)]
+
+def CreateCardRects(_slot, *layers):
+    global cardYOffset
+
+    thisCardRects = []
+    for layer in layers:
+        thisCardRects.append(
+        screen.blit
+        (
+            layer,
+            (
+                CenterObject
+                (
+                    _slot,
+                    handManager.handSize,
+                    CARD_W*CARD_SCALE,
+                    5,
+                    screen.get_width(),
+                    CARD_AREA_X
+                ),
+                CARD_AREA_POS_Y + cardYOffset[_slot]
+            )
+        )
+    )
+    
+    return thisCardRects
 
 def DrawCard(card : Card, slot):
     #set the image to corresponding atlas coords
@@ -69,16 +101,23 @@ def DrawCard(card : Card, slot):
     image_card_debuff = pg.transform.smoothscale_by(image_card_debuff, CARD_SCALE)
 
     #show images
-    cardRect = []
-    cardRect.append(screen.blit(image_enh_bg_card, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
-    cardRect.append(screen.blit(image_card, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
-    cardRect.append(screen.blit(image_enh_over_card, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
-    cardRect.append(screen.blit(image_card_seal, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
-    cardRect.append(screen.blit(image_card_debuff, (CenterObject(slot, handManager.handSize, CARD_W*CARD_SCALE, 5, screen.get_width(), CARD_AREA_X), CARD_AREA_POS_Y)))
+    thisCardRects = CreateCardRects(slot, image_enh_bg_card, image_card, image_enh_over_card, image_card_seal, image_card_debuff)
+    
+    global allCardsRects
+    allCardsRects.append(thisCardRects)
 
-    global cardRects
-    cardRects.append(cardRect)
+    global cardSelectionRect
+    cardSelectionRect.append(thisCardRects[0])
+
+def SelectCard(slot):
+    cardYOffset[slot] = -50
+
+def DeselectCard(slot):
+    cardYOffset[slot] = 0
+
 def DrawHand(_handSize):
+    global cardSelectionRect
+    cardSelectionRect = []
     for i in range(_handSize):
         DrawCard(handManager.currentHand[i], i)
     
@@ -103,12 +142,16 @@ def DrawToInternalScreen():
     DrawJokers()
     DrawHand(handManager.handSize)
 def ShowUI():
+    global render_scale, render_offset
+
     DrawToInternalScreen()
 
-    #-- Scale to window --
-    window.fill((0, 0, 0))  # black bars
+    window.fill((0, 0, 0))
     scaled, pos = scale_surface(screen, window.get_size())
-    window.blit(scaled, pos)
 
+    render_offset = pos
+    render_scale = scaled.get_width() / screen.get_width()
+
+    window.blit(scaled, pos)
     pg.display.flip()
     clock.tick(60)

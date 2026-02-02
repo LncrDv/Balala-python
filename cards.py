@@ -101,6 +101,13 @@ class Card:
     #sticker : str
     debuffed : bool
 
+    @property
+    def name(self) -> str:
+        return (f"{self.value} of {self.suit}")
+    
+
+
+
     def __init__(self, _value, _suit, _edition, _enhancement, _seal, _sticker, _debuffed):
         self.value = _value
         self.suit = _suit
@@ -112,7 +119,7 @@ class Card:
 
     def describe(self):
         print(
-            "\nName : ",self.value,"of",self.suit,
+            "\nName : ",self.name,
             "\nEdition : ",self.edition,
             "\nEnhancement : ",self.enhancement,
             "\nSeal : ",self.seal,
