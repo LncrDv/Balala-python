@@ -13,16 +13,18 @@ def WindowToScreenPos(mousePos):
 
         return scaledX, scaledY
 def SelectCard(_card : Card):
-    ui.SelectCard(_card)
+    slot = handManager.currentHand.index(_card)
+    ui.SelectCard(slot)
     selectedCards.append(_card)
     
-
 def DeselectCard(_card : Card):
     try:
-        ui.DeselectCard(_card)
+        slot = handManager.currentHand.index(_card)
+        ui.DeselectCard(slot)
         selectedCards.remove(_card)
     except ValueError:
-        print(_card.name," is not selected")
+        print(_card.name, "is not selected")
+
 
 def DeselectAllCards():
     for _ in range(len(selectedCards)):

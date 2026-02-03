@@ -14,13 +14,13 @@ def DrawXAdditionnalCards(numberOfAdditionnalCards):
     global currentHandSize
 
     for _ in range(numberOfAdditionnalCards):
-
-        if(len(deckManager.currentDeck) > 0):
-            currentHand.append(deckManager.currentDeck.pop(0))
-            ui.cardYOffset.append(0)
+        if len(deckManager.currentDeck) > 0:
+            new_card = deckManager.currentDeck.pop(0)
+            currentHand.append(new_card)
+            ui.cardYOffset.append(0)  # <-- exactly once per new card
             currentHandSize = len(currentHand)
-        else:       #A pu cartes ds le deck
-            print("Deck is empty !")        #No visual feedback yet
+        else:
+            print("Deck is empty!")  # No visual feedback yet
 
 def DrawFullHand(_handSize = maxHandSize):
 

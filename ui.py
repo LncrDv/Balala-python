@@ -112,11 +112,12 @@ def DrawCard(card : Card, slot):
     global cardSelectionRect
     cardSelectionRect.append(thisCardRects[0])
 
-def SelectCard(_card : Card):
-    cardYOffset[handManager.currentHand.index(_card)] = CARD_SELECT_OFFSET
+def SelectCard(slot: int):
+    cardYOffset[slot] = CARD_SELECT_OFFSET
 
-def DeselectCard(_card : Card):
-    cardYOffset[handManager.currentHand.index(_card)] = 0
+def DeselectCard(slot: int):
+    cardYOffset[slot] = 0
+
 
 def DrawHand():
     global cardSelectionRect
