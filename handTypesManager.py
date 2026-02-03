@@ -1,4 +1,5 @@
 from collections import Counter
+import deckManager
 handTypes = {
     "High Card":{"default":{"chips":5,"mult":1}},
     "Pair":{"default":{"chips":10,"mult":2}},
@@ -24,22 +25,53 @@ levelUpHandTypes = {
 }
 
 def DetermineHandType(cards):
-    cardsValues = [card.value for card in cards]
+
     thisHandTypes = ["High Card"]
-    counts = Counter(cardsValues)
-    
+
     #Check for hands of multiple times the same card
-    if 2 in counts.values():
+    cardsValues = [card.value for card in cards]
+    cardsSuits = [card.suit for card in cards]
+    
+    frequencyOfSameSymbol = Counter(cardsValues)
+
+    if 2 in frequencyOfSameSymbol.values():
         thisHandTypes.append("Pair")
-    elif 3 in counts.values():
+    elif 3 in frequencyOfSameSymbol.values():
         thisHandTypes.append("Three Of A Kind")
-    elif 4 in counts.values():
+    elif 4 in frequencyOfSameSymbol.values():
         thisHandTypes.append("Four Of A Kind")
-    elif 5 in counts.values():
+    elif 5 in frequencyOfSameSymbol.values():
         #thisHandTypes.append("Five Of A Kind")
         pass
     
+    #Check for pair+pair and pair+3oak
     
+    freq = sorted(frequencyOfSameSymbol.values(), reverse=True)
+    if freq == [2,2,1]:
+        thisHandTypes.append("Two Pair")
+    if freq == [3,2]:
+        thisHandTypes.append("Full House")
+    
+    #Check for flush
+    if all(suit == cardsSuits[0] for suit in cardsSuits):
+        thisHandTypes.append("Flush")
+
+    #Check for straight
+    valueToRank = {v: i for i, v in enumerate(deckManager.cardValues, start=2)}     #Convertir une valeur en index
+    ranks = sorted(valueToRank[card.value] for card in cards)
+
+    #Si la main c'est [10,10,J,Q,K], elle sera interprétée comme [10,J,Q,K]. Dcp c un failsafe
+    if len(set(ranks)) != len(ranks):
+        return False
+    
+    if ranks == list(range(ranks[0], ranks[0] + len(ranks))):
+        thisHandTypes.append("Straight")
+
+
+    #Check for complex hands
+    if "Straight" in thisHandTypes and "Flush" in thisHandTypes:
+        thisHandTypes.append("Straight Flush")
+    return thisHandTypes
 
 
 class PlanetCard:

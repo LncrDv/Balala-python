@@ -38,7 +38,7 @@ def TryToPlayHand():
     if num_cards_to_draw >= 1:
         print("Playing hand:", [c.name for c in selectedCards])
         #Do stuff here
-        handTypesManager.DetermineHandType(selectedCards)
+        print(handTypesManager.DetermineHandType(selectedCards))
 
         totalScore += CalculateHandScore()
         DiscardCards()
