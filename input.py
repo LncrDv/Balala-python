@@ -1,11 +1,12 @@
 import pygame as pg
-
 spaceBar = False
 lmb = False
 rmb = False
+
 def GetEvents():
     global spaceBar
     global lmb, rmb
+    global pressedPlayHand, pressedDiscardHand
     spaceBar = False
     lmb = rmb = False
 
@@ -27,3 +28,4 @@ def GetEvents():
                 rmb = True
             else:
                 rmb = False
+

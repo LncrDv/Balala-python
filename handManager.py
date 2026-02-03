@@ -28,18 +28,18 @@ def DrawFullHand(_handSize = maxHandSize):
 
 #Discarding Hand Logic
 def DiscardCards():
-    # Copy so we can safely iterate
-    cards_to_discard = selectedCards.copy()
+    import ui
+    # Copy list to avoid modifying while iterating
+    cards_to_remove = selectedCards.copy()
 
-    for card in cards_to_discard:
-        print("Removing:", card.name)
-        # Remove the card from currentHand
-        slot = currentHand.index(card)
+    # Get indices in descending order
+    slots_to_remove = sorted([currentHand.index(c) for c in cards_to_remove], reverse=True)
+
+    for slot in slots_to_remove:
+        print("Removing:", currentHand[slot].name)
+        ui.DeselectCard(slot)        # reset offset safely
         currentHand.pop(slot)
-        ui.cardYOffset.pop(slot)
+        ui.cardYOffset.pop(slot)     # keep lengths in sync
 
-        # Deselect in UI only — do NOT remove from selectedCards here
-        ui.DeselectCard(slot)
-
-    # Clear all selections after discarding
+    # Clear selection to avoid residual cards
     selectedCards.clear()

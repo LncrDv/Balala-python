@@ -12,4 +12,4 @@ while running:
     input.GetEvents()
     ShowUI(roundManager.inRound)
     selectionManager.CardSelectLogic()
-    roundManager.RoundLoop(input.spaceBar)
+    roundManager.RoundLoop()

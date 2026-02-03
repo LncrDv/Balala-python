@@ -2,7 +2,8 @@ import pygame as pg
 from jokers import *
 from cards import *
 from helper import *
-import jokerManager, deckManager, handManager, selectionManager, roundManager
+import jokerManager, deckManager, handManager, selectionManager, roundManager, input
+import ui_state
 
 #Default lines to show a window with pygame
 pg.init()
@@ -25,7 +26,7 @@ scaleY = screen.get_size()[1]/DEFAULT_WINDOW_SIZE_Y
 
 #region CardsDrawing
 CARD_AREA_X = 1500
-CARD_AREA_DEFAULT_POS_Y = 800
+CARD_AREA_DEFAULT_POS_Y = 700
 CARD_SELECT_OFFSET = -100
 
 cardSelectionRect : list[pg.Rect]
@@ -34,7 +35,13 @@ cardSelectionRect = []
 allCardsRects : list[list[pg.Rect]]
 allCardsRects = []
 
+playButtonRect = None
+discardButtonRect = None
 cardYOffset = [0 for _ in range(handManager.currentHandSize)]
+
+pressedPlayHand = False
+pressedDiscardHand = False
+
 
 def CreateCardRects(_slot, *layers):
     global cardYOffset
@@ -172,6 +179,47 @@ def DrawTotalScoreDisplay():
     totalScoreText = papyrusFontTotalScore.render(f"Total Score : {roundManager.totalScore}", True, (255,255,255), (0,0,0))
     screen.blit(totalScoreText, SCORE_TOTAL_DISPLAY_TEXT_POS)
 
+HANDS_LEFT_TEXT_SIZE = 50
+HANDS_LEFT_TEXT_POS = (50, 540+HANDS_LEFT_TEXT_SIZE)
+def DrawHandsLeftDisplay():
+    papyrusFontHandsLeft = pg.font.Font("resources/fonts/papyrus.ttf", HANDS_LEFT_TEXT_SIZE)
+    handsLeftText = papyrusFontHandsLeft.render(f"{roundManager.handsLeft}", True, (255,255,255), (43,255,255))
+    screen.blit(handsLeftText, HANDS_LEFT_TEXT_POS)
+
+DISCARDS_LEFT_TEXT_SIZE = 50
+DISCARDS_LEFT_TEXT_POS = (50, 540-DISCARDS_LEFT_TEXT_SIZE)
+def DrawDiscardsLeftDisplay():
+    papyrusFontDiscardsLeft = pg.font.Font("resources/fonts/papyrus.ttf", DISCARDS_LEFT_TEXT_SIZE)
+    discardsLeftText = papyrusFontDiscardsLeft.render(f"{roundManager.discardsLeft}", True, (255,255,255), (128,32,0))
+    screen.blit(discardsLeftText, DISCARDS_LEFT_TEXT_POS)
+
+PLAY_BUTTON_TEXT_SIZE = 50
+def DrawPlayHandButton():
+    font = pg.font.Font("resources/fonts/papyrus.ttf", 50)
+    text = font.render("Play Hand", True, (255,255,255), (43,255,255))
+    ui_state.playButtonRect = screen.blit(
+        text,
+        ((DEFAULT_SCREEN_SIZE_X + font.size("Play Hand")[0]) / 2 + 100, 1000)
+    )
+DISCARD_BUTTON_TEXT_SIZE = 50
+def DrawDiscardHandButton():
+    font = pg.font.Font("resources/fonts/papyrus.ttf", 50)
+    text = font.render("Discard Hand", True, (255,255,255), (128,32,0))
+    ui_state.discardButtonRect = screen.blit(
+        text,
+        ((DEFAULT_SCREEN_SIZE_X - font.size("Discard Hand")[0]) / 2 - 100, 1000)
+    )
+def CheckForButtonsPress():
+    mouse_pos = pg.mouse.get_pos()
+    # convert to screen coords if using scaled surface
+    # scr_mouse = WindowToScreenPos(mouse_pos, screen, window)
+    scr_mouse = WindowToScreenPos(mouse_pos, screen, window)
+    if input.lmb:
+        ui_state.pressedPlayHand = ui_state.playButtonRect.collidepoint(scr_mouse)
+        ui_state.pressedDiscardHand = ui_state.discardButtonRect.collidepoint(scr_mouse)
+    else:
+        ui_state.pressedPlayHand = False
+        ui_state.pressedDiscardHand = False
 #endregion
 def DrawToInternalScreen(_inRound):
     #Draw to internal screen
@@ -186,18 +234,19 @@ def DrawToInternalScreen(_inRound):
         DrawMultDisplay()
         DrawHandScoreDisplay()
         DrawTotalScoreDisplay()
-
+        #Hands&Discards
+        DrawHandsLeftDisplay()
+        DrawDiscardsLeftDisplay()
+        DrawPlayHandButton()
+        DrawDiscardHandButton()
 def ShowUI(_inRound):
-    global render_scale, render_offset
-
+    
     DrawToInternalScreen(_inRound)
 
     window.fill((0, 0, 0))
+    CheckForButtonsPress()
+
     scaled, pos = scale_surface(screen, window.get_size())
-
-    render_offset = pos
-    render_scale = scaled.get_width() / screen.get_width()
-
     window.blit(scaled, pos)
     pg.display.flip()
     clock.tick(60)

@@ -1,17 +1,11 @@
 import ui, pygame, handManager, input
 from cards import Card
+import helper
 
 selectedCards = []
 CARD_SELECTION_LIMIT = 5
 
-def WindowToScreenPos(mousePos):
-        mouseX, mouseY = mousePos
-        offsetX, offsetY = ui.render_offset
 
-        scaledX = (mouseX - offsetX) / ui.render_scale
-        scaledY = (mouseY - offsetY) / ui.render_scale
-
-        return scaledX, scaledY
 def SelectCard(_card : Card):
     slot = handManager.currentHand.index(_card)
     ui.SelectCard(slot)
@@ -47,7 +41,7 @@ def OnCardSelection(_card : Card):
 def CardSelectLogic():
     if input.lmb:
         mousePos = pygame.mouse.get_pos()
-        mouseScreenPos = WindowToScreenPos(mousePos)
+        mouseScreenPos = helper.WindowToScreenPos(mousePos, ui.screen, ui.window)
 
         for cardRect in reversed(ui.cardSelectionRect):
 

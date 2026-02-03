@@ -5,6 +5,18 @@ def GetCardsValue(cards : list[Card]):
     for card in cards:
         values.append(card.value)
     return values
+def WindowToScreenPos(mousePos, screen, window):
+    scaled, pos = scale_surface(screen, window.get_size())
+    render_offset = pos
+    render_scale = scaled.get_width() / screen.get_width()
+
+    mouseX, mouseY = mousePos
+    offsetX, offsetY = render_offset
+
+    scaledX = (mouseX - offsetX) / render_scale
+    scaledY = (mouseY - offsetY) / render_scale
+
+    return scaledX, scaledY
 def scale_surface(surface, window_size):
     win_w, win_h = window_size
     surf_w, surf_h = surface.get_size()

@@ -1,10 +1,14 @@
 from handManager import DrawXAdditionnalCards, DiscardCards
 from selectionManager import selectedCards
 from helper import GetCardsValue
+import ui_state
+
 inRound = True
 
-maxHand, maxDiscards = 3,3
-handsLeft, discardsLeft = maxHand, maxDiscards
+maxHand = 3
+maxDiscards = 3
+handsLeft = maxHand
+discardsLeft = maxDiscards
 totalScore = 0
 
 def CalculateChips():
@@ -43,11 +47,29 @@ def TryToPlayHand():
         return
     # Clear selection to avoid residual cards
     selectedCards.clear()
+def TryToDiscardHand():
+    global discardsLeft
+    if discardsLeft <= 0:
+        print("No more discards !")
+        return
 
+    num_cards_to_discard = len(selectedCards)  # store BEFORE discarding
+    if num_cards_to_discard >= 1:
+        print("Discarding hand:", [c.name for c in selectedCards])
+        DiscardCards()
+        DrawXAdditionnalCards(num_cards_to_discard)
+        discardsLeft -= 1
+    else:
+        print("Not enough cards are selected !")
+        return
+    # Clear selection to avoid residual cards
+    selectedCards.clear()
    
-def RoundLoop(spacebarPressed):
-    if spacebarPressed:
-        print("Trying to play hand : ", GetCardsValue(selectedCards))
+def RoundLoop():
+    if ui_state.pressedPlayHand:
+        print("Trying to play hand:", GetCardsValue(selectedCards))
         TryToPlayHand()
-
+    elif ui_state.pressedDiscardHand:
+        print("Trying to discard hand:", GetCardsValue(selectedCards))
+        TryToDiscardHand()
     
