@@ -2,11 +2,12 @@ from handManager import DrawXAdditionnalCards, DiscardCards
 from selectionManager import selectedCards
 from helper import GetCardsValue
 import ui_state
+import handTypesManager
 
 inRound = True
 
 maxHand = 3
-maxDiscards = 3
+maxDiscards = 10
 handsLeft = maxHand
 discardsLeft = maxDiscards
 totalScore = 0
@@ -36,6 +37,9 @@ def TryToPlayHand():
     num_cards_to_draw = len(selectedCards)  # store BEFORE discarding
     if num_cards_to_draw >= 1:
         print("Playing hand:", [c.name for c in selectedCards])
+        #Do stuff here
+        handTypesManager.DetermineHandType(selectedCards)
+
         totalScore += CalculateHandScore()
         DiscardCards()
         DrawXAdditionnalCards(num_cards_to_draw)

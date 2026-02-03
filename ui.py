@@ -42,7 +42,6 @@ cardYOffset = [0 for _ in range(handManager.currentHandSize)]
 pressedPlayHand = False
 pressedDiscardHand = False
 
-
 def CreateCardRects(_slot, *layers):
     global cardYOffset
 
@@ -183,7 +182,7 @@ HANDS_LEFT_TEXT_SIZE = 50
 HANDS_LEFT_TEXT_POS = (50, 540+HANDS_LEFT_TEXT_SIZE)
 def DrawHandsLeftDisplay():
     papyrusFontHandsLeft = pg.font.Font("resources/fonts/papyrus.ttf", HANDS_LEFT_TEXT_SIZE)
-    handsLeftText = papyrusFontHandsLeft.render(f"{roundManager.handsLeft}", True, (255,255,255), (43,255,255))
+    handsLeftText = papyrusFontHandsLeft.render(f"{roundManager.handsLeft}", True, (255,255,255), (128,0,0))
     screen.blit(handsLeftText, HANDS_LEFT_TEXT_POS)
 
 DISCARDS_LEFT_TEXT_SIZE = 50
@@ -196,7 +195,7 @@ def DrawDiscardsLeftDisplay():
 PLAY_BUTTON_TEXT_SIZE = 50
 def DrawPlayHandButton():
     font = pg.font.Font("resources/fonts/papyrus.ttf", 50)
-    text = font.render("Play Hand", True, (255,255,255), (43,255,255))
+    text = font.render("Play Hand", True, (255,255,255), (128,0,0))
     ui_state.playButtonRect = screen.blit(
         text,
         ((DEFAULT_SCREEN_SIZE_X + font.size("Play Hand")[0]) / 2 + 100, 1000)
@@ -209,6 +208,7 @@ def DrawDiscardHandButton():
         text,
         ((DEFAULT_SCREEN_SIZE_X - font.size("Discard Hand")[0]) / 2 - 100, 1000)
     )
+#endregion
 def CheckForButtonsPress():
     mouse_pos = pg.mouse.get_pos()
     # convert to screen coords if using scaled surface

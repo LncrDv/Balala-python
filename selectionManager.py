@@ -3,7 +3,7 @@ from cards import Card
 import helper
 
 selectedCards = []
-CARD_SELECTION_LIMIT = 5
+CARD_SELECTION_LIMIT = 10
 
 
 def SelectCard(_card : Card):

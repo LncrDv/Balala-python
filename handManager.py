@@ -2,7 +2,7 @@ import deckManager
 from cards import Card
 from selectionManager import selectedCards
 import ui
-maxHandSize = 7
+maxHandSize = 15
 currentHandSize = 0
 
 currentHand : list[Card]
