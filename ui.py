@@ -34,7 +34,7 @@ cardSelectionRect = []
 allCardsRects : list[list[pg.Rect]]
 allCardsRects = []
 
-cardYOffset = [0 for _ in range(handManager.handSize)]
+cardYOffset = [0 for _ in range(handManager.currentHandSize)]
 
 def CreateCardRects(_slot, *layers):
     global cardYOffset
@@ -49,7 +49,7 @@ def CreateCardRects(_slot, *layers):
                 CenterObject
                 (
                     _slot,
-                    handManager.handSize,
+                    handManager.currentHandSize,
                     CARD_W*CARD_SCALE,
                     5,
                     screen.get_width(),
@@ -112,16 +112,17 @@ def DrawCard(card : Card, slot):
     global cardSelectionRect
     cardSelectionRect.append(thisCardRects[0])
 
-def SelectCard(slot):
-    cardYOffset[slot] = CARD_SELECT_OFFSET
+def SelectCard(_card : Card):
+    cardYOffset[handManager.currentHand.index(_card)] = CARD_SELECT_OFFSET
 
-def DeselectCard(slot):
-    cardYOffset[slot] = 0
+def DeselectCard(_card : Card):
+    cardYOffset[handManager.currentHand.index(_card)] = 0
 
-def DrawHand(_handSize):
+def DrawHand():
     global cardSelectionRect
+    global cardYOffset
     cardSelectionRect = []
-    for i in range(_handSize):
+    for i in range(len(handManager.currentHand)):
         DrawCard(handManager.currentHand[i], i)
     
 #endregion
@@ -146,8 +147,7 @@ SCORE_CHIPS_TEXT_SIZE = 50
 SCORE_CHIPS_TEXT_POS = (100, 540+SCORE_CHIPS_TEXT_SIZE)
 def CalculateChips():
     chipsScore = 0
-    for selectedCardIndex in selectionManager.selectedCards:
-        selectedCard = handManager.currentHand[selectedCardIndex]
+    for selectedCard in selectionManager.selectedCards:
         chipsScore += selectedCard.chips
     return chipsScore
 def DrawChipsDisplay():
@@ -159,8 +159,7 @@ SCORE_MULT_TEXT_SIZE = 50
 SCORE_MULT_TEXT_POS = (100, 540-SCORE_MULT_TEXT_SIZE)
 def CalculateMult():
     multScore = 1
-    for selectedCardIndex in selectionManager.selectedCards:
-        selectedCard = handManager.currentHand[selectedCardIndex]
+    for selectedCard in selectionManager.selectedCards:
         multScore += selectedCard.mult
     return multScore
 def DrawMultDisplay():
@@ -181,21 +180,23 @@ def DrawHandScoreDisplay():
 
 
 #endregion
-def DrawToInternalScreen():
+def DrawToInternalScreen(_inRound):
     #Draw to internal screen
     #Black borders
     screen.fill((27,112,50))
     #Draw cards
     DrawJokers()
-    DrawHand(handManager.handSize)
-    #Score
-    DrawChipsDisplay()
-    DrawMultDisplay()
-    DrawHandScoreDisplay()
-def ShowUI():
+    if _inRound:
+        DrawHand()
+        #Score
+        DrawChipsDisplay()
+        DrawMultDisplay()
+        DrawHandScoreDisplay()
+
+def ShowUI(_inRound):
     global render_scale, render_offset
 
-    DrawToInternalScreen()
+    DrawToInternalScreen(_inRound)
 
     window.fill((0, 0, 0))
     scaled, pos = scale_surface(screen, window.get_size())

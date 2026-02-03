@@ -1,12 +1,27 @@
-import deckManager, helper
-handSize = 9
+import deckManager
+from cards import Card
+from selectionManager import selectedCards
+import ui
+maxHandSize = 7
+currentHandSize = 0
 
+currentHand : list[Card]
 currentHand = []
-#Drawing Hand logic
-def DrawHand(_handSize = handSize):
-    global handSize
-    handSize = _handSize
-    global currentHand
 
-    for i in range(_handSize):
-        currentHand.append(deckManager.full_deck.pop(0))
+
+#Drawing Hand logic
+def DrawXAdditionnalCards(numberOfAdditionnalCards):
+    global currentHandSize
+
+    for _ in range(numberOfAdditionnalCards):
+
+        if(len(deckManager.currentDeck) > 0):
+            currentHand.append(deckManager.currentDeck.pop(0))
+            ui.cardYOffset.append(0)
+            currentHandSize = len(currentHand)
+        else:       #A pu cartes ds le deck
+            print("Deck is empty !")        #No visual feedback yet
+
+def DrawFullHand(_handSize = maxHandSize):
+
+    DrawXAdditionnalCards(_handSize - currentHandSize)      #Calcul du n de cartes qui faut pour compléter la main

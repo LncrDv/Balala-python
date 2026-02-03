@@ -1,4 +1,5 @@
-import ui, pygame, handManager
+import ui, pygame, handManager, input
+from cards import Card
 
 selectedCards = []
 CARD_SELECTION_LIMIT = 5
@@ -11,54 +12,52 @@ def WindowToScreenPos(mousePos):
         scaledY = (mouseY - offsetY) / ui.render_scale
 
         return scaledX, scaledY
-def SelectCard(_slot):
-    ui.SelectCard(_slot)
-    selectedCards.append(_slot)
+def SelectCard(_card : Card):
+    ui.SelectCard(_card)
+    selectedCards.append(_card)
+    
 
-def DeselectCard(_slot):
-    ui.DeselectCard(_slot)
-    selectedCards.pop(selectedCards.index(_slot))
+def DeselectCard(_card : Card):
+    try:
+        ui.DeselectCard(_card)
+        selectedCards.remove(_card)
+    except ValueError:
+        print(_card.name," is not selected")
 
-def OnCardSelection(slot):
-    global selectedCards
+def DeselectAllCards():
+    for _ in range(len(selectedCards)):
+        #Discard at index 0 bc else index error
+        DeselectCard(selectedCards[0])
 
-    if slot in selectedCards:
+def OnCardSelection(_card : Card):
+    global selectedCardsIndexes
+
+    if _card in selectedCards:
         #Deselect a card bc already selected
-        DeselectCard(slot)
+        DeselectCard(_card)
     else:
         #Failsafe to prevent over-selecting
         if len(selectedCards) >= CARD_SELECTION_LIMIT:
             return
         #Select a card bc not already selected
-        SelectCard(slot)
+        SelectCard(_card)
 
 def CardSelectLogic():
-    global selectedCards
-    for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                #Mouse left click pressed yippee
+    if input.lmb:
+        mousePos = pygame.mouse.get_pos()
+        mouseScreenPos = WindowToScreenPos(mousePos)
 
-                mousePos = pygame.mouse.get_pos()
-                mouseScreenPos = WindowToScreenPos(mousePos)
+        for cardRect in reversed(ui.cardSelectionRect):
 
-                for cardRect in reversed(ui.cardSelectionRect):
+            if cardRect.collidepoint(mouseScreenPos):
 
-                    if cardRect.collidepoint(mouseScreenPos):
+                #print(f"On card ! : {handManager.currentHand[ui.cardSelectionRect.index(cardRect)].name}")
+                OnCardSelection(handManager.currentHand[ui.cardSelectionRect.index(cardRect)])
 
-                        #print(f"On card ! : {handManager.currentHand[ui.cardSelectionRect.index(cardRect)].name}")
-                        OnCardSelection(ui.cardSelectionRect.index(cardRect))
-
-                        break
-                    #else:
-                        #print(f"Boowomp : {handManager.currentHand[i].name}")
-            elif event.button == 3:
-                for _ in range(len(selectedCards)):
-                    #Discard at index 0 bc else index error
-                    DeselectCard(selectedCards[0])
-
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
+                break
+            #else:
+                #print(f"Boowomp : {handManager.currentHand[i].name}")
+    elif input.rmb:
+        DeselectAllCards()
 
         

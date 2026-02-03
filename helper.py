@@ -1,5 +1,10 @@
 import pygame as pg
-
+from cards import Card
+def GetCardsValue(cards : list[Card]):
+    values = []
+    for card in cards:
+        values.append(card.value)
+    return values
 def scale_surface(surface, window_size):
     win_w, win_h = window_size
     surf_w, surf_h = surface.get_size()
