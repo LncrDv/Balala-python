@@ -36,7 +36,7 @@ def DiscardCards():
     slots_to_remove = sorted([currentHand.index(c) for c in cards_to_remove], reverse=True)
 
     for slot in slots_to_remove:
-        print("Removing:", currentHand[slot].name)
+        #print("Removing:", currentHand[slot].name)
         ui.DeselectCard(slot)        # reset offset safely
         currentHand.pop(slot)
         ui.cardYOffset.pop(slot)     # keep lengths in sync

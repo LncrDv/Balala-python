@@ -28,7 +28,11 @@ class Joker:
     def __init__(self, _name : str, _textureCoords, _modifiers : dict):
         self.name = _name
         self.textureCoords = _textureCoords
-        self.modifiers = _modifiers
+        self.modifiers = {
+            "active":False,
+            "debuffed":False
+            }
+        self.modifiers.update(_modifiers)
     
     def describe(self):
         print

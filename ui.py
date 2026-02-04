@@ -185,22 +185,23 @@ SCORE_HAND_DISPLAY_TEXT_SIZE = 50
 SCORE_HAND_DISPLAY_TEXT_POS = (100, 540-SCORE_HAND_DISPLAY_TEXT_SIZE*3)
 def DrawHandScoreDisplay():
     papyrusFontHandScore = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_HAND_DISPLAY_TEXT_SIZE)
-    handScoreText = papyrusFontHandScore.render(f"Hand Score : {roundManager.CalculateHandScore(selectionManager.currentHand_bestHandType)}", True, (255,255,255), (0,0,0))
+    handScoreText = papyrusFontHandScore.render(f"{roundManager.CalculateHandScore()}", True, (255,255,255), (0,0,0))
     screen.blit(handScoreText, SCORE_HAND_DISPLAY_TEXT_POS)
 
-SCORE_TOTAL_DISPLAY_TEXT_SIZE = 50
-SCORE_TOTAL_DISPLAY_TEXT_POS = (100, 540-SCORE_TOTAL_DISPLAY_TEXT_SIZE*5)
-def DrawTotalScoreDisplay():
-    papyrusFontTotalScore = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_HAND_DISPLAY_TEXT_SIZE)
-    totalScoreText = papyrusFontTotalScore.render(f"Total Score : {roundManager.totalScore}", True, (255,255,255), (0,0,0))
-    screen.blit(totalScoreText, SCORE_TOTAL_DISPLAY_TEXT_POS)
-
 HAND_TYPE_DISPLAY_TEXT_SIZE = 50
-HAND_TYPE_DISPLAY_TEXT_POS = (100, 540-HAND_TYPE_DISPLAY_TEXT_SIZE*7)
+HAND_TYPE_DISPLAY_TEXT_POS = (100, 540-HAND_TYPE_DISPLAY_TEXT_SIZE*5)
 def DrawHandTypeDisplay():
     papyrusFontHandType = pg.font.Font("resources/fonts/papyrus.ttf", HAND_TYPE_DISPLAY_TEXT_SIZE)
     handTypeText = papyrusFontHandType.render(f"{selectionManager.currentHand_bestHandType}", True, (255,255,255), (0,0,0))
     screen.blit(handTypeText, HAND_TYPE_DISPLAY_TEXT_POS)
+
+
+SCORE_TOTAL_DISPLAY_TEXT_SIZE = 50
+SCORE_TOTAL_DISPLAY_TEXT_POS = (100, 540-SCORE_TOTAL_DISPLAY_TEXT_SIZE*7)
+def DrawTotalScoreDisplay():
+    papyrusFontTotalScore = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_HAND_DISPLAY_TEXT_SIZE)
+    totalScoreText = papyrusFontTotalScore.render(f"{roundManager.totalScore}", True, (255,255,255), (0,0,0))
+    screen.blit(totalScoreText, SCORE_TOTAL_DISPLAY_TEXT_POS)
 
 
 HANDS_LEFT_TEXT_SIZE = 50
