@@ -20,6 +20,10 @@ currentHand_scoringPlusMult = 0
 
 currentHand_handTypeTimesMult = 1
 currentHand_scoringTimesMult = 1
+
+currentHand_handTypes = None
+currentHand_bestHandType = None
+
 def UpdateScore(_plusChips = 0, _plusMult = 0, _timesMult = 0):
     global currentHand_scoringPlusChips, currentHand_scoringPlusMult, currentHand_scoringTimesMult
     currentHand_scoringPlusChips += _plusChips
@@ -63,6 +67,7 @@ def TryToPlayHand():
         #print("Playing hand:", [c.name for c in selectionManager.selectedCards])
 
         #Determine hand types in hand
+        global currentHand_bestHandType, currentHand_handTypes
         currentHand_handTypes = handTypesManager.DetermineHandTypes(selectionManager.selectedCards, selectionManager.CARD_SELECTION_LIMIT)
         #Determine best hand type from hand types
         currentHand_bestHandType = handTypesManager.DetermineBestHandType(currentHand_handTypes)

@@ -83,5 +83,11 @@ collection_jokers = {
         "Chaos The Clown",
         (1,0),
         {"plusFreeRerolls":1,"isActive":False}
+    ),
+    "joker_droll": Joker(
+        "Droll Joker",
+        (6,0),
+        {"conditionnal":{"requireHandOfType":"Flush"},"plusMult":10}
     )
+
 }

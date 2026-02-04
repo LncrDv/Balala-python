@@ -16,17 +16,31 @@ def ApplyJokerEffects():
     global equippedJokers
     for joker in equippedJokers:
         for modifier in joker.modifiers.keys():
+            value = joker.modifiers[modifier]
             if modifier == "active" or modifier == "debuffed":
-                if joker.modifiers[modifier] == True:
+                if value == True:
                     print(f'''Joker {joker.name} is debuffed !''')
                     continue
+            
             else:
+                #Conditionnal Jokers
+                if modifier == "conditionnal":
+                    for condition in value:
+                        #For each condition in the conditionnal dict
+                        match condition:
+                            #Conditions in conditionnal dict
+                            case "requireHandOfType":
+                                if not value["requireHandOfType"] in roundManager.currentHand_handTypes:
+                                    print(f'''Joker {joker.name} did not fulfill condition : {value["requireHandOfType"]} !''')
+                                    continue
+                    
+                
                 match modifier:
                     case "plusMult":
-                        print(f'''Joker {joker.name} added {joker.modifiers["plusMult"]} mult !''')
-                        roundManager.UpdateScore(_plusMult = joker.modifiers["plusMult"])
+                        print(f'''Joker {joker.name} added {value} mult !''')
+                        roundManager.UpdateScore(_plusMult = value)
                     case "plusChips":
-                        print(f'''Joker {joker.name} added {joker.modifiers["plusChips"]} chips !''')
-                        roundManager.UpdateScore(_plusChips = joker.modifiers["plusChips"])
+                        print(f'''Joker {joker.name} added {value} chips !''')
+                        roundManager.UpdateScore(_plusChips = value)
                     case __:
                         pass
