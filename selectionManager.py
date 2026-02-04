@@ -1,10 +1,12 @@
-import ui, pygame, handManager, input
+import ui, pygame, handManager, input, handTypesManager
 from cards import Card
 import helper
 
 selectedCards = []
-CARD_SELECTION_LIMIT = 10
+CARD_SELECTION_LIMIT = 5
 
+currentHand_handTypes = None
+currentHand_bestHandType = None
 
 def SelectCard(_card : Card):
     slot = handManager.currentHand.index(_card)
@@ -39,6 +41,8 @@ def OnCardSelection(_card : Card):
         SelectCard(_card)
 
 def CardSelectLogic():
+    global currentHand_bestHandType, currentHand_handTypes
+    #Mouse inputs
     if input.lmb:
         mousePos = pygame.mouse.get_pos()
         mouseScreenPos = helper.WindowToScreenPos(mousePos, ui.screen, ui.window)
@@ -55,5 +59,12 @@ def CardSelectLogic():
                 #print(f"Boowomp : {handManager.currentHand[i].name}")
     elif input.rmb:
         DeselectAllCards()
+
+    #Hand score
+    #Determine hand types in hand
+    currentHand_handTypes = handTypesManager.DetermineHandTypes(selectedCards, CARD_SELECTION_LIMIT)
+    #Determine best hand type from hand types
+    currentHand_bestHandType = handTypesManager.DetermineBestHandType(currentHand_handTypes)
+    #print(f'''Best hand type : {currentHand_bestHandType} with value {handTypesManager.handTypes[currentHand_bestHandType]["default"]["chips"]} chips and {handTypesManager.handTypes[currentHand_bestHandType]["default"]["mult"]} mult''')
 
         

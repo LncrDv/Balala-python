@@ -1,5 +1,5 @@
 from handManager import DrawXAdditionnalCards, DiscardCards
-from selectionManager import selectedCards
+import selectionManager
 from helper import GetCardsValue
 import ui_state
 import handTypesManager
@@ -12,19 +12,22 @@ handsLeft = maxHand
 discardsLeft = maxDiscards
 totalScore = 0
 
-def CalculateChips():
-    chipsScore = 0
-    for selectedCard in selectedCards:
-        chipsScore += selectedCard.chips
-    return chipsScore
-def CalculateMult():
-    multScore = 1
-    for selectedCard in selectedCards:
-        multScore += selectedCard.mult
-    return multScore
-def CalculateHandScore():
+def CalculateChips(_handType):
+    chipsScore = handTypesManager.handTypes[_handType]["default"]["chips"]
+    addedChipScore = 0
+    for selectedCard in selectionManager.selectedCards:
+        addedChipScore += selectedCard.chips
+    return chipsScore, addedChipScore
+def CalculateMult(_handType):
+    global currentHand_bestHandType
+    multScore = handTypesManager.handTypes[_handType]["default"]["mult"]
+    addedMultScore = 0
+    for selectedCard in selectionManager.selectedCards:
+        addedMultScore += selectedCard.mult
+    return multScore, addedMultScore
+def CalculateHandScore(_handType):
     handScore = 0
-    handScore = CalculateChips() * CalculateMult()
+    handScore = (CalculateChips(_handType)[0]+CalculateChips(_handType)[1]) * (CalculateMult(_handType)[0]+CalculateMult(_handType)[1])
     return handScore
 
 #Play hand logic
@@ -34,13 +37,21 @@ def TryToPlayHand():
         print("No more hands !")
         return
 
-    num_cards_to_draw = len(selectedCards)  # store BEFORE discarding
+    num_cards_to_draw = len(selectionManager.selectedCards)  # store BEFORE discarding
     if num_cards_to_draw >= 1:
-        print("Playing hand:", [c.name for c in selectedCards])
-        #Do stuff here
-        print(handTypesManager.DetermineHandType(selectedCards))
+        print("Playing hand:", [c.name for c in selectionManager.selectedCards])
 
-        totalScore += CalculateHandScore()
+        #Determine hand types in hand
+        currentHand_handTypes = handTypesManager.DetermineHandTypes(selectionManager.selectedCards, selectionManager.CARD_SELECTION_LIMIT)
+        #Determine best hand type from hand types
+        currentHand_bestHandType = handTypesManager.DetermineBestHandType(currentHand_handTypes)
+
+        #Apply the hand level to score
+
+        #Calculate Joker impacts
+
+        #Calculate Hand Score
+        totalScore += CalculateHandScore(currentHand_bestHandType)
         DiscardCards()
         DrawXAdditionnalCards(num_cards_to_draw)
         handsLeft -= 1
@@ -50,16 +61,16 @@ def TryToPlayHand():
         print("Not enough cards are selected !")
         return
     # Clear selection to avoid residual cards
-    selectedCards.clear()
+    selectionManager.selectedCards.clear()
 def TryToDiscardHand():
     global discardsLeft
     if discardsLeft <= 0:
         print("No more discards !")
         return
 
-    num_cards_to_discard = len(selectedCards)  # store BEFORE discarding
+    num_cards_to_discard = len(selectionManager.selectedCards)  # store BEFORE discarding
     if num_cards_to_discard >= 1:
-        print("Discarding hand:", [c.name for c in selectedCards])
+        print("Discarding hand:", [c.name for c in selectionManager.selectedCards])
         DiscardCards()
         DrawXAdditionnalCards(num_cards_to_discard)
         discardsLeft -= 1
@@ -67,13 +78,13 @@ def TryToDiscardHand():
         print("Not enough cards are selected !")
         return
     # Clear selection to avoid residual cards
-    selectedCards.clear()
+    selectionManager.selectedCards.clear()
    
 def RoundLoop():
     if ui_state.pressedPlayHand:
-        print("Trying to play hand:", GetCardsValue(selectedCards))
+        print("Trying to play hand:", GetCardsValue(selectionManager.selectedCards))
         TryToPlayHand()
     elif ui_state.pressedDiscardHand:
-        print("Trying to discard hand:", GetCardsValue(selectedCards))
+        print("Trying to discard hand:", GetCardsValue(selectionManager.selectedCards))
         TryToDiscardHand()
     
