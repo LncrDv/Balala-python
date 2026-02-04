@@ -150,10 +150,13 @@ def DrawJokers():
         DrawJoker(joker, i)
 #endregion
 #region Score Display
+GLOBAL_FONT = "resources/fonts/balatroFont.ttf"
+
+
 SCORE_CHIPS_TEXT_SIZE = 50
 SCORE_CHIPS_TEXT_POS = (100, 540+SCORE_CHIPS_TEXT_SIZE)
 def DrawChipsDisplay():
-    papyrusFontChips = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_CHIPS_TEXT_SIZE)
+    papyrusFontChips = pg.font.Font(GLOBAL_FONT, SCORE_CHIPS_TEXT_SIZE)
 
     chips = roundManager.CalculateChips(selectionManager.currentHand_bestHandType)[0]
     addedChips = roundManager.CalculateChips(selectionManager.currentHand_bestHandType)[1]
@@ -168,7 +171,7 @@ def DrawChipsDisplay():
 SCORE_MULT_TEXT_SIZE = 50
 SCORE_MULT_TEXT_POS = (100, 540-SCORE_MULT_TEXT_SIZE)
 def DrawMultDisplay():
-    papyrusFontMult = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_MULT_TEXT_SIZE)
+    papyrusFontMult = pg.font.Font(GLOBAL_FONT, SCORE_MULT_TEXT_SIZE)
 
     mult = roundManager.CalculateMult(selectionManager.currentHand_bestHandType)[0]
     addedMult = roundManager.CalculateMult(selectionManager.currentHand_bestHandType)[1]
@@ -184,14 +187,14 @@ def DrawMultDisplay():
 SCORE_HAND_DISPLAY_TEXT_SIZE = 50
 SCORE_HAND_DISPLAY_TEXT_POS = (100, 540-SCORE_HAND_DISPLAY_TEXT_SIZE*3)
 def DrawHandScoreDisplay():
-    papyrusFontHandScore = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_HAND_DISPLAY_TEXT_SIZE)
+    papyrusFontHandScore = pg.font.Font(GLOBAL_FONT, SCORE_HAND_DISPLAY_TEXT_SIZE)
     handScoreText = papyrusFontHandScore.render(f"{roundManager.CalculateHandScore()}", True, (255,255,255), (0,0,0))
     screen.blit(handScoreText, SCORE_HAND_DISPLAY_TEXT_POS)
 
 HAND_TYPE_DISPLAY_TEXT_SIZE = 50
 HAND_TYPE_DISPLAY_TEXT_POS = (100, 540-HAND_TYPE_DISPLAY_TEXT_SIZE*5)
 def DrawHandTypeDisplay():
-    papyrusFontHandType = pg.font.Font("resources/fonts/papyrus.ttf", HAND_TYPE_DISPLAY_TEXT_SIZE)
+    papyrusFontHandType = pg.font.Font(GLOBAL_FONT, HAND_TYPE_DISPLAY_TEXT_SIZE)
     handTypeText = papyrusFontHandType.render(f"{selectionManager.currentHand_bestHandType}", True, (255,255,255), (0,0,0))
     screen.blit(handTypeText, HAND_TYPE_DISPLAY_TEXT_POS)
 
@@ -199,7 +202,7 @@ def DrawHandTypeDisplay():
 SCORE_TOTAL_DISPLAY_TEXT_SIZE = 50
 SCORE_TOTAL_DISPLAY_TEXT_POS = (100, 540-SCORE_TOTAL_DISPLAY_TEXT_SIZE*7)
 def DrawTotalScoreDisplay():
-    papyrusFontTotalScore = pg.font.Font("resources/fonts/papyrus.ttf", SCORE_HAND_DISPLAY_TEXT_SIZE)
+    papyrusFontTotalScore = pg.font.Font(GLOBAL_FONT, SCORE_HAND_DISPLAY_TEXT_SIZE)
     totalScoreText = papyrusFontTotalScore.render(f"{roundManager.totalScore}", True, (255,255,255), (0,0,0))
     screen.blit(totalScoreText, SCORE_TOTAL_DISPLAY_TEXT_POS)
 
@@ -207,20 +210,20 @@ def DrawTotalScoreDisplay():
 HANDS_LEFT_TEXT_SIZE = 50
 HANDS_LEFT_TEXT_POS = (0, 540+HANDS_LEFT_TEXT_SIZE)
 def DrawHandsLeftDisplay():
-    papyrusFontHandsLeft = pg.font.Font("resources/fonts/papyrus.ttf", HANDS_LEFT_TEXT_SIZE)
+    papyrusFontHandsLeft = pg.font.Font(GLOBAL_FONT, HANDS_LEFT_TEXT_SIZE)
     handsLeftText = papyrusFontHandsLeft.render(f"{roundManager.handsLeft}", True, (255,255,255), (0,0,128))
     screen.blit(handsLeftText, HANDS_LEFT_TEXT_POS)
 
 DISCARDS_LEFT_TEXT_SIZE = 50
 DISCARDS_LEFT_TEXT_POS = (0, 540-DISCARDS_LEFT_TEXT_SIZE)
 def DrawDiscardsLeftDisplay():
-    papyrusFontDiscardsLeft = pg.font.Font("resources/fonts/papyrus.ttf", DISCARDS_LEFT_TEXT_SIZE)
+    papyrusFontDiscardsLeft = pg.font.Font(GLOBAL_FONT, DISCARDS_LEFT_TEXT_SIZE)
     discardsLeftText = papyrusFontDiscardsLeft.render(f"{roundManager.discardsLeft}", True, (255,255,255), (128,0,0))
     screen.blit(discardsLeftText, DISCARDS_LEFT_TEXT_POS)
 
 PLAY_BUTTON_TEXT_SIZE = 50
 def DrawPlayHandButton():
-    font = pg.font.Font("resources/fonts/papyrus.ttf", 50)
+    font = pg.font.Font(GLOBAL_FONT, 50)
     text = font.render("Play Hand", True, (255,255,255), (0,0,128))
     ui_state.playButtonRect = screen.blit(
         text,
@@ -228,7 +231,7 @@ def DrawPlayHandButton():
     )
 DISCARD_BUTTON_TEXT_SIZE = 50
 def DrawDiscardHandButton():
-    font = pg.font.Font("resources/fonts/papyrus.ttf", 50)
+    font = pg.font.Font(GLOBAL_FONT, 50)
     text = font.render("Discard Hand", True, (255,255,255), (128,32,0))
     ui_state.discardButtonRect = screen.blit(
         text,
@@ -246,6 +249,8 @@ def CheckForButtonsPress():
     else:
         ui_state.pressedPlayHand = False
         ui_state.pressedDiscardHand = False
+
+#region Joker Score show
 #endregion
 def DrawToInternalScreen(_inRound):
     #Draw to internal screen
