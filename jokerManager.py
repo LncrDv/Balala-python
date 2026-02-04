@@ -1,6 +1,8 @@
 from jokers import *
 import random
 import roundManager
+import ui_state
+
 equippedJokers = []
 
 def generateRandomJokers(n):
@@ -12,37 +14,45 @@ def generateRandomJokers(n):
     for joker in equippedJokers:
         print("Equipped Joker : ", joker.name)
 
-def ApplyJoker(joker : Joker):
+def ApplyJoker(joker: Joker):
     for modifier in joker.modifiers.keys():
-            value = joker.modifiers[modifier]
-            if modifier == "active" or modifier == "debuffed":
-                if value == True:
-                    print(f'''Joker {joker.name} is debuffed !''')
-                    return
-            
-            else:
-                #Conditionnal Jokers
-                if modifier == "conditionnal":
-                    for condition in value:
-                        
-                        #For each condition in the conditionnal dict
-                        match condition:
-                            #Conditions in conditionnal dict
-                            case "requireHandOfType":
-                                if not value["requireHandOfType"] in roundManager.currentHand_handTypes:
-                                    print(f'''Joker {joker.name} did not fulfill condition : {value["requireHandOfType"]} !''')
-                                    return
-                
-                
-                match modifier:
-                    case "plusMult":
-                        print(f'''Joker {joker.name} added {value} mult !''')
-                        roundManager.UpdateScore(_plusMult = value)
-                    case "plusChips":
-                        print(f'''Joker {joker.name} added {value} chips !''')
-                        roundManager.UpdateScore(_plusChips = value)
-                    case __:
-                        pass
+        value = joker.modifiers[modifier]
+
+        if modifier in ("active", "debuffed") and value is True:
+            return
+
+        if modifier == "conditionnal":
+            for condition in value:
+                match condition:
+                    case "requireHandOfType":
+                        if value["requireHandOfType"] not in roundManager.currentHand_handTypes:
+                            return
+
+        match modifier:
+            case "plusMult":
+                roundManager.UpdateScore(_plusMult=value)
+
+                # ✅ Joker-only visual
+                ui_state.floatingTexts.append(
+                    ui_state.FloatingText(
+                        f"+{value} MULT",
+                        ui_state.MULT_FLOAT_POS,
+                        (255, 220, 0)
+                    )
+                )
+
+            case "plusChips":
+                roundManager.UpdateScore(_plusChips=value)
+
+                # ✅ Joker-only visual
+                ui_state.floatingTexts.append(
+                    ui_state.FloatingText(
+                        f"+{value} CHIPS",
+                        ui_state.CHIPS_FLOAT_POS,
+                        (120, 255, 200)
+                    )
+                )
+
 def ApplyJokerEffects():
     global equippedJokers
     for joker in equippedJokers:

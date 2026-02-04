@@ -22,10 +22,10 @@ def create52CardDeck():
                 value,
                 suit,
                 "None",
-                choice(list(ENHANCEMENT_TO_ATLASCOORDS.keys())),
-                choice(list(SEAL_TO_ATLASCOORDS.keys())),
                 "None",
-                bool(randint(0,1)),
+                "None",
+                "None",
+                False,
                 def_plusChips_value[cardValues.index(value)],
                 def_plusMult_value[cardValues.index(value)]
                 ))
