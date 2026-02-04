@@ -12,28 +12,27 @@ def generateRandomJokers(n):
     for joker in equippedJokers:
         print("Equipped Joker : ", joker.name)
 
-def ApplyJokerEffects():
-    global equippedJokers
-    for joker in equippedJokers:
-        for modifier in joker.modifiers.keys():
+def ApplyJoker(joker : Joker):
+    for modifier in joker.modifiers.keys():
             value = joker.modifiers[modifier]
             if modifier == "active" or modifier == "debuffed":
                 if value == True:
                     print(f'''Joker {joker.name} is debuffed !''')
-                    continue
+                    return
             
             else:
                 #Conditionnal Jokers
                 if modifier == "conditionnal":
                     for condition in value:
+                        
                         #For each condition in the conditionnal dict
                         match condition:
                             #Conditions in conditionnal dict
                             case "requireHandOfType":
                                 if not value["requireHandOfType"] in roundManager.currentHand_handTypes:
                                     print(f'''Joker {joker.name} did not fulfill condition : {value["requireHandOfType"]} !''')
-                                    continue
-                    
+                                    return
+                
                 
                 match modifier:
                     case "plusMult":
@@ -44,3 +43,7 @@ def ApplyJokerEffects():
                         roundManager.UpdateScore(_plusChips = value)
                     case __:
                         pass
+def ApplyJokerEffects():
+    global equippedJokers
+    for joker in equippedJokers:
+        ApplyJoker(joker)

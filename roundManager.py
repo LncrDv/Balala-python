@@ -4,6 +4,7 @@ from helper import GetCardsValue
 import ui_state
 import handTypesManager
 import jokerManager
+import time
 inRound = True
 
 maxHand = 3
@@ -73,7 +74,8 @@ def TryToPlayHand():
         currentHand_bestHandType = handTypesManager.DetermineBestHandType(currentHand_handTypes)
 
         #Apply the hand level to score
-
+        global currentHand_scoringPlusChips
+        currentHand_scoringPlusChips += 2000
         #Calculate Joker impacts
         jokerManager.ApplyJokerEffects()
         #Calculate Hand Score

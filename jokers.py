@@ -61,33 +61,33 @@ collection_jokers = {
         {"plusMult" : 4}
         ),
 
-    "joker_juggler" : Joker(
-        "Juggler",
-        (0,1),
-        {"plusHandSize" : 1}
-        ),
+    # "joker_juggler" : Joker(
+    #     "Juggler",
+    #     (0,1),
+    #     {"plusHandSize" : 1}
+    #     ),
 
-    "joker_drunkard" : Joker(
-        "Drunkard",
-        (1,1),
-        {"plusDiscard" : 1}
-        ),
+    # "joker_drunkard" : Joker(
+    #     "Drunkard",
+    #     (1,1),
+    #     {"plusDiscard" : 1}
+    #     ),
     
-    "joker_blueprint" : Joker(
-        "Blueprint",
-        (0,3),
-        {"compatible" : False, "copyingJoker" : None}
-    ),
+#    "joker_blueprint" : Joker(
+#        "Blueprint",
+#        (0,3),
+#        {"compatible" : False, "copyingJoker" : None}
+#    ),
 
-    "joker_chaos" : Joker(
-        "Chaos The Clown",
-        (1,0),
-        {"plusFreeRerolls":1,"isActive":False}
-    ),
+#    "joker_chaos" : Joker(
+#        "Chaos The Clown",
+#        (1,0),
+#        {"plusFreeRerolls":1,"isActive":False}
+#    ),
     "joker_droll": Joker(
         "Droll Joker",
         (6,0),
-        {"conditionnal":{"requireHandOfType":"Flush"},"plusMult":10}
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Flush"},"plusMult":10}
     )
 
 }
