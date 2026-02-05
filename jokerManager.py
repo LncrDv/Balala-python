@@ -47,9 +47,10 @@ def ApplyJoker(joker: Joker):
                 # Joker-only visual
                 ui_state.floatingTexts.append(
                     ui_state.FloatingText(
-                        f"+{modifierValue} MULT",
-                        ui_state.MULT_FLOAT_POS,
-                        (255, 220, 0)
+                        f"+{modifierValue}",
+                        (equippedJokers.index(joker), 10),
+                        (255, 0, 0),
+                        1
                     )
                 )
 
@@ -59,9 +60,10 @@ def ApplyJoker(joker: Joker):
                 # Joker-only visual
                 ui_state.floatingTexts.append(
                     ui_state.FloatingText(
-                        f"+{modifierValue} CHIPS",
-                        ui_state.CHIPS_FLOAT_POS,
-                        (120, 255, 200)
+                        f"+{modifierValue}",
+                        (equippedJokers.index(joker), 10),
+                        (0, 0, 255),
+                        1
                     )
                 )
 

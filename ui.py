@@ -4,6 +4,7 @@ from cards import *
 from helper import *
 import jokerManager, deckManager, handManager, selectionManager, roundManager, input
 import ui_state
+import timeManager
 
 # ----------------------------
 # INITIAL SETUP
@@ -28,31 +29,41 @@ GLOBAL_FONT = "resources/fonts/balatroFont.ttf"
 # ----------------------------
 # FLOATING TEXTS
 # ----------------------------
+
+def UpdateFloatingDisplays():
+    for floatingText in ui_state.floatingTexts:
+        floatingText.elapsedTime += timeManager.deltaTime
+        if floatingText.elapsedTime > floatingText.timer:
+            ui_state.floatingTexts.remove(floatingText)
+
 def DrawFloatingTexts():
-    font = pg.font.Font(GLOBAL_FONT, 36)
-    mult_stack = 0
-    chips_stack = 0
 
-    for ft in ui_state.floatingTexts[:]:
-        ft.timer -= clock.get_time() / 1000
-        ft.alpha = int(255 * (ft.timer / 0.6))
-        ft.pos[1] -= FLOATING_TEXT_SPEED * clock.get_time() / 1000
+    for floatingText in ui_state.floatingTexts:
 
-        if ft.timer <= 0:
-            ui_state.floatingTexts.remove(ft)
-            continue
+        floatingTextFont = pg.font.Font(GLOBAL_FONT, 40)
 
-        # Stack MULT and CHIPS separately
-        if "MULT" in ft.text:
-            ft.pos[0], ft.pos[1] = ui_state.MULT_FLOAT_POS[0], ui_state.MULT_FLOAT_POS[1] - mult_stack * 40
-            mult_stack += 1
-        elif "CHIPS" in ft.text:
-            ft.pos[0], ft.pos[1] = ui_state.CHIPS_FLOAT_POS[0], ui_state.CHIPS_FLOAT_POS[1] - chips_stack * 40
-            chips_stack += 1
+        text_surface = floatingTextFont.render(
+            floatingText.text,
+            True,
+            (255, 255, 255),
+            floatingText.color
+        )
+        
+        floatingTextPos = (CenterObject(floatingText.pos[0], len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, screen.get_width(), JOKER_AREA_X) + JOKER_W*JOKER_SCALE/2, floatingText.pos[1] + JOKER_H*JOKER_SCALE)
+        
 
-        surf = font.render(ft.text, True, ft.color)
-        surf.set_alpha(ft.alpha)
-        screen.blit(surf, ft.pos)
+        text_surface = floatingTextFont.render(
+            floatingText.text,
+            True,
+            (255, 255, 255),
+            floatingText.color
+        )
+
+        screen.blit(
+            text_surface,
+            (floatingTextPos)
+        )
+
 
 
 # ----------------------------
@@ -233,6 +244,8 @@ def DrawToInternalScreen(_inRound):
         DrawDiscardsLeftDisplay()
         DrawPlayHandButton()
         DrawDiscardHandButton()
+
+        UpdateFloatingDisplays()
 
 def ShowUI(_inRound):
     DrawToInternalScreen(_inRound)

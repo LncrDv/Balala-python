@@ -1,5 +1,5 @@
 from ui import ShowUI
-import jokerManager, deckManager, handManager, selectionManager, roundManager, input
+import jokerManager, deckManager, handManager, selectionManager, roundManager, input, timeManager
 
 #10.66 jokers at 2.5x scale fit in the screen
 jokerManager.generateRandomJokers(5)
@@ -13,3 +13,4 @@ while running:
     ShowUI(roundManager.inRound)
     selectionManager.CardSelectLogic()
     roundManager.RoundLoop()
+    timeManager.CalculateDT()
