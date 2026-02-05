@@ -39,11 +39,11 @@ def DetermineHandTypes(cards, maxSelectionSize):
 
     if 2 in frequencyOfSameSymbol.values():
         thisHandTypes.append("Pair")
-    elif 3 in frequencyOfSameSymbol.values():
+    if 3 in frequencyOfSameSymbol.values():
         thisHandTypes.append("Three Of A Kind")
-    elif 4 in frequencyOfSameSymbol.values():
+    if 4 in frequencyOfSameSymbol.values():
         thisHandTypes.append("Four Of A Kind")
-    elif 5 in frequencyOfSameSymbol.values():
+    if 5 in frequencyOfSameSymbol.values():
         #thisHandTypes.append("Five Of A Kind")
         pass
     

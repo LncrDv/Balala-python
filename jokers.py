@@ -84,10 +84,76 @@ collection_jokers = {
 #        (1,0),
 #        {"plusFreeRerolls":1,"isActive":False}
 #    ),
+
+    "joker_sly":Joker(
+        "Sly Joker",
+        (0,14),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Pair"},"plusChips":50}
+    ),
+    "joker_wily":Joker(
+        "Wily Joker",
+        (1,14),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Three Of A Kind"},"plusChips":100}
+    ),
+    "joker_clever":Joker(
+        "Clever Joker",
+        (2,14),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Two Pair"},"plusChips":80}
+    ),
+    "joker_devious":Joker(
+        "Devious Joker",
+        (3,14),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Straight"},"plusChips":100}
+    ),
+    "joker_crafty":Joker(
+        "Crafty Joker",
+        (4,14),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Flush"},"plusChips":80}
+    ),
+    "joker_jolly":Joker(
+        "Jolly Joker",
+        (2,0),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Pair"},"plusMult":8}
+    ),
+    "joker_zany":Joker(
+        "Zany Joker",
+        (3,0),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Three Of A Kind"},"plusMult":12}
+    ),
+    "joker_mad":Joker(
+        "Mad Joker",
+        (4,0),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Two Pair"},"plusMult":10}
+    ),
+    "joker_crazy":Joker(
+        "Crazy Joker",
+        (5,0),
+        {"conditionnal":{"fulfilled":False,"requireHandOfType":"Straight"},"plusMult":12}
+    ),
     "joker_droll": Joker(
         "Droll Joker",
         (6,0),
         {"conditionnal":{"fulfilled":False,"requireHandOfType":"Flush"},"plusMult":10}
-    )
+    ),
+    "joker_greedy": Joker(
+        "Greedy Joker",
+        (6,1),
+        {"conditionnal":{"conditionAffectDomain":"plusMult","fulfilled":False,"requireCardOfSuit":"Diamonds","increment":3}, "plusMult":0}
+    ),
+    "joker_lusty": Joker(
+        "Lusty Joker",
+        (7,1),
+        {"conditionnal":{"conditionAffectDomain":"plusMult","fulfilled":False,"requireCardOfSuit":"Hearts","increment":3}, "plusMult":0}
+    ),
+    "joker_wrathful": Joker(
+        "Wrathful Joker",
+        (8,1),
+        {"conditionnal":{"conditionAffectDomain":"plusMult","fulfilled":False,"requireCardOfSuit":"Spades","increment":3}, "plusMult":0}
+    ),
+    "joker_gluttonous": Joker(
+        "Gluttonous Joker",
+        (9,1),
+        {"conditionnal":{"conditionAffectDomain":"plusMult","fulfilled":False,"requireCardOfSuit":"Clubs","increment":3}, "plusMult":0}
+    ),
 
 }

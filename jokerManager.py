@@ -15,39 +15,51 @@ def generateRandomJokers(n):
         print("Equipped Joker : ", joker.name)
 
 def ApplyJoker(joker: Joker):
-    for modifier in joker.modifiers.keys():
-        value = joker.modifiers[modifier]
+    for modifier, modifierValue in joker.modifiers.items():
 
-        if modifier in ("active", "debuffed") and value is True:
+        if modifier in ("active", "debuffed") and modifierValue is True:
             return
 
         if modifier == "conditionnal":
-            for condition in value:
+            for condition, conditionValue in modifierValue.items():
                 match condition:
                     case "requireHandOfType":
-                        if value["requireHandOfType"] not in roundManager.currentHand_handTypes:
+                        if conditionValue not in roundManager.currentHand_handTypes:
+                            print(roundManager.currentHand_handTypes)
+                            print(f'''Joker "{joker.name}" did not fulfill condition : {condition} = {conditionValue} !''')
                             return
+                    case "requireCardOfSuit":
+
+                        condAffectDomain = joker.modifiers[modifier]["conditionAffectDomain"]
+
+                        joker.modifiers[condAffectDomain] = 0
+
+                        for card in roundManager.playedHand:
+                            if card.suit == conditionValue:
+                                joker.modifiers[condAffectDomain] += joker.modifiers[modifier]["increment"]
+
+
 
         match modifier:
             case "plusMult":
-                roundManager.UpdateScore(_plusMult=value)
+                roundManager.UpdateScore(_plusMult=modifierValue)
 
-                # ✅ Joker-only visual
+                # Joker-only visual
                 ui_state.floatingTexts.append(
                     ui_state.FloatingText(
-                        f"+{value} MULT",
+                        f"+{modifierValue} MULT",
                         ui_state.MULT_FLOAT_POS,
                         (255, 220, 0)
                     )
                 )
 
             case "plusChips":
-                roundManager.UpdateScore(_plusChips=value)
+                roundManager.UpdateScore(_plusChips=modifierValue)
 
-                # ✅ Joker-only visual
+                # Joker-only visual
                 ui_state.floatingTexts.append(
                     ui_state.FloatingText(
-                        f"+{value} CHIPS",
+                        f"+{modifierValue} CHIPS",
                         ui_state.CHIPS_FLOAT_POS,
                         (120, 255, 200)
                     )
