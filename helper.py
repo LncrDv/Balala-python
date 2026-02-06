@@ -36,19 +36,40 @@ def scale_surface(surface, window_size):
 
     return scaled_surface, (x, y)
 
-def CenterObject(objectIndex, numberOfObjects, objectWidth, padding, screenWidth, areaWidth):
-    # Total width using desired padding
-    totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * padding
+def CenterObject(
+    objectIndex,
+    numberOfObjects,
+    objectWidth,
+    padding,
+    leftX,
+    rightX,
+    maxPadding=True
+):
+    areaWidth = rightX - leftX
 
-    #If overflow, decrease padding
-    if totalWidth > areaWidth and numberOfObjects > 1:
-        padding = (areaWidth - numberOfObjects * objectWidth) / (numberOfObjects - 1)
-        totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * padding
+    if numberOfObjects > 1:
+        # Padding that maximizes spacing while staying in bounds
+        maxPossiblePadding = (areaWidth - numberOfObjects * objectWidth) / (numberOfObjects - 1)
 
-    #Center cards on screen
-    startX = (screenWidth - totalWidth) / 2
+        if not maxPadding:
+            # Use user padding ONLY if it fits
+            totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * padding
+            if totalWidth <= areaWidth:
+                finalPadding = padding
+            else:
+                finalPadding = maxPossiblePadding
+        else:
+            finalPadding = maxPossiblePadding
+    else:
+        finalPadding = 0
 
-    return startX + objectIndex * (objectWidth + padding)
+    totalWidth = numberOfObjects * objectWidth + (numberOfObjects - 1) * finalPadding
+
+    # Center within bounds
+    startX = leftX + (areaWidth - totalWidth) / 2
+
+    return startX + objectIndex * (objectWidth + finalPadding)
+
 
 def CalculatePadding(numberOfObjects, objectWidth, padding, areaWidth):
 

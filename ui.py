@@ -42,14 +42,22 @@ def DrawFloatingTexts():
         
         floatingTextFont = pg.font.Font(GLOBAL_FONT, 40)
 
-        text_surface = floatingTextFont.render(
-            floatingText.text,
-            True,
-            (255, 255, 255),
-            floatingText.color
-        )
+        if not floatingText.invertBgAndColor:
+            text_surface = floatingTextFont.render(
+                floatingText.text,
+                True,
+                (255, 255, 255),
+                floatingText.color
+            )
+        else:
+            text_surface = floatingTextFont.render(
+                floatingText.text,
+                True,
+                floatingText.color
+                
+            )
         
-        floatingTextPos = (CenterObject(floatingText.pos[0], len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, screen.get_width(), JOKER_AREA_X) + JOKER_W*JOKER_SCALE/2, floatingText.pos[1] + JOKER_H*JOKER_SCALE)
+        floatingTextPos = (CenterObject(floatingText.pos[0], len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, JOKER_ZONE_LEFTX, JOKER_ZONE_RIGHTX) + JOKER_W*JOKER_SCALE/2, floatingText.pos[1] + JOKER_H*JOKER_SCALE)
         
 
         text_surface = floatingTextFont.render(
@@ -69,8 +77,9 @@ def DrawFloatingTexts():
 # ----------------------------
 # CARDS
 # ----------------------------
-CARD_AREA_X = 1500
-CARD_AREA_DEFAULT_POS_Y = 700
+CARD_ZONE_LEFTX = 530
+CARD_ZONE_RIGHTX = 1650
+CARD_AREA_DEFAULT_POS_Y = 633
 CARD_SELECT_OFFSET = -100
 
 cardSelectionRect: list[pg.Rect] = []
@@ -94,8 +103,8 @@ def CreateCardRects(_slot, *layers):
                         handManager.currentHandSize,
                         CARD_W * CARD_SCALE,
                         5,
-                        screen.get_width(),
-                        CARD_AREA_X
+                        CARD_ZONE_LEFTX,
+                        CARD_ZONE_RIGHTX
                     ),
                     CARD_AREA_DEFAULT_POS_Y + cardYOffset[_slot]
                 )
@@ -139,13 +148,15 @@ def DeselectCard(slot: int):
 # ----------------------------
 # JOKERS
 # ----------------------------
-JOKER_AREA_X = 1000
+JOKER_ZONE_LEFTX = 508
+JOKER_ZONE_RIGHTX = 1410
 JOKER_TEXT_OFFSET_Y = 140
+JOKER_Y_POS = 15
 
 def DrawJoker(joker: Joker, slot):
     image_joker = JOKER_ATLAS.get(joker.textureCoords[0], joker.textureCoords[1])
     image_joker = pg.transform.smoothscale_by(image_joker, JOKER_SCALE)
-    screen.blit(image_joker, (CenterObject(slot, len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, screen.get_width(), JOKER_AREA_X), 0))
+    screen.blit(image_joker, (CenterObject(slot, len(jokerManager.equippedJokers), JOKER_W*JOKER_SCALE, 5, JOKER_ZONE_LEFTX, JOKER_ZONE_RIGHTX), JOKER_Y_POS))
 
 def DrawJokers():
     for i, joker in enumerate(jokerManager.equippedJokers):
@@ -155,64 +166,135 @@ def DrawJokers():
 # ----------------------------
 # SCORE DISPLAY
 # ----------------------------
-SCORE_CHIPS_TEXT_POS = (100, 590)
-SCORE_MULT_TEXT_POS = (100, 490)
-SCORE_HAND_DISPLAY_POS = (100, 400)
-HAND_TYPE_DISPLAY_POS = (100, 300)
-SCORE_TOTAL_DISPLAY_POS = (100, 180)
-HANDS_LEFT_DISPLAY_POS = (0, 590)
-DISCARDS_LEFT_DISPLAY_POS = (0, 180)
 
-ui_state.MULT_FLOAT_POS = (SCORE_MULT_TEXT_POS[0] + 260, SCORE_MULT_TEXT_POS[1])
-ui_state.CHIPS_FLOAT_POS = (SCORE_CHIPS_TEXT_POS[0] + 260, SCORE_CHIPS_TEXT_POS[1])
+def CenterObjectFromCorners(upperLeft, bottomRight, surface):
+    """
+    Returns the top-left position needed to center `surface`
+    inside the rectangle defined by upperLeft and bottomRight.
+    """
+    rectWidth = bottomRight[0] - upperLeft[0]
+    rectHeight = bottomRight[1] - upperLeft[1]
+
+    centerX = upperLeft[0] + rectWidth / 2
+    centerY = upperLeft[1] + rectHeight / 2
+
+    return (
+        centerX - surface.get_width() / 2,
+        centerY - surface.get_height() / 2
+    )
+
+GLOBAL_FONT_SIZE = 72
+
+SCORE_CHIPS_TEXT_POS = [(25, 545),(213, 643)]
+SCORE_MULT_TEXT_POS = [(270, 545),(456, 643)]
+SCORE_HAND_DISPLAY_POS = (110, 465)
+HAND_TYPE_DISPLAY_POS = [(10,431),(472,528)]
+SCORE_TOTAL_DISPLAY_POS = [(151,340),(460,410)]
+HANDS_LEFT_DISPLAY_POS = [(201,713),(314,780)]
+DISCARDS_LEFT_DISPLAY_POS = [(349,713),(461,780)]
 
 def DrawChipsDisplay():
     chips, addedChips = roundManager.CalculateChips(selectionManager.currentHand_bestHandType)
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    text = f"Chips : {chips}" + (f" + {addedChips}" if addedChips else "")
-    screen.blit(font.render(text, True, (255, 255, 255), (0, 0, 128)), SCORE_CHIPS_TEXT_POS)
+
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+    textSurface = font.render(f"{chips}", True, (255,255,255), (0,146,255))
+
+    pos = CenterObjectFromCorners(SCORE_CHIPS_TEXT_POS[0], SCORE_CHIPS_TEXT_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 def DrawMultDisplay():
     mult, addedMult = roundManager.CalculateMult(selectionManager.currentHand_bestHandType)
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    text = f"Mult : {mult}" + (f" + {addedMult}" if addedMult else "")
-    screen.blit(font.render(text, True, (255, 255, 255), (128, 0, 0)), SCORE_MULT_TEXT_POS)
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+
+    textSurface = font.render(f"{mult}", True, (255,255,255), (254,76,64))
+
+    pos = CenterObjectFromCorners(SCORE_MULT_TEXT_POS[0], SCORE_MULT_TEXT_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 def DrawHandScoreDisplay():
     score = roundManager.CalculateHandScore()
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    screen.blit(font.render(str(score), True, (255, 255, 255), (0, 0, 0)), SCORE_HAND_DISPLAY_POS)
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+    screen.blit(font.render(str(score), True, (255, 255, 255), (47, 58, 60)), SCORE_HAND_DISPLAY_POS)
 
 def DrawHandTypeDisplay():
     handType = selectionManager.currentHand_bestHandType
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    screen.blit(font.render(str(handType), True, (255, 255, 255), (0, 0, 0)), HAND_TYPE_DISPLAY_POS)
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+
+    textSurface = font.render(str(handType), True, (255, 255, 255), (24, 35, 37))
+    pos = CenterObjectFromCorners(HAND_TYPE_DISPLAY_POS[0],HAND_TYPE_DISPLAY_POS[1],textSurface)
+    screen.blit(textSurface, pos)
 
 def DrawTotalScoreDisplay():
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    screen.blit(font.render(str(roundManager.totalScore), True, (255, 255, 255), (0, 0, 0)), SCORE_TOTAL_DISPLAY_POS)
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+
+    textSurface = font.render(str(roundManager.totalScore), True, (255, 255, 255), (47,58,60))
+    pos = CenterObjectFromCorners(SCORE_TOTAL_DISPLAY_POS[0],SCORE_TOTAL_DISPLAY_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 def DrawHandsLeftDisplay():
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    screen.blit(font.render(str(roundManager.handsLeft), True, (255, 255, 255), (0, 0, 128)), HANDS_LEFT_DISPLAY_POS)
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+
+    textSurface = font.render(str(roundManager.handsLeft), True, (0, 146, 255))
+    pos = CenterObjectFromCorners(HANDS_LEFT_DISPLAY_POS[0], HANDS_LEFT_DISPLAY_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 def DrawDiscardsLeftDisplay():
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    screen.blit(font.render(str(roundManager.discardsLeft), True, (255, 255, 255), (128, 0, 0)), DISCARDS_LEFT_DISPLAY_POS)
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
+
+    textSurface = font.render(str(roundManager.discardsLeft), True, (254,76,64))
+    pos = CenterObjectFromCorners(DISCARDS_LEFT_DISPLAY_POS[0], DISCARDS_LEFT_DISPLAY_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 
 # ----------------------------
 # BUTTONS
 # ----------------------------
+PLAY_HAND_BUTTON_POS = [(729,900),(936,1027)]
+DISCARD_HAND_BUTTON_POS = [(1153,900),(1360,1026)]
 def DrawPlayHandButton():
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    text = font.render("Play Hand", True, (255, 255, 255), (0, 0, 128))
-    ui_state.playButtonRect = screen.blit(text, ((DEFAULT_SCREEN_SIZE_X / 2 - 350), 1000))
+
+    font = pg.font.Font(GLOBAL_FONT, 35)
+
+    if(len(selectionManager.selectedCards) > 0 and roundManager.handsLeft > 0):
+        textSurface = font.render("Play Hand", True, (0,83,157))
+        buttonBg = pg.draw.rect(screen, (0, 146, 255), pg.Rect(PLAY_HAND_BUTTON_POS[0][0],
+                                                    PLAY_HAND_BUTTON_POS[0][1],
+                                                    PLAY_HAND_BUTTON_POS[1][0]-PLAY_HAND_BUTTON_POS[0][0],
+                                                    PLAY_HAND_BUTTON_POS[1][1]-PLAY_HAND_BUTTON_POS[0][1]))
+    
+    else:
+        textSurface = font.render("Play Hand", True, (255,255,255), (84,76,77))
+        buttonBg = pg.draw.rect(screen, (84,76,77), pg.Rect(PLAY_HAND_BUTTON_POS[0][0],
+                                                    PLAY_HAND_BUTTON_POS[0][1],
+                                                    PLAY_HAND_BUTTON_POS[1][0]-PLAY_HAND_BUTTON_POS[0][0],
+                                                    PLAY_HAND_BUTTON_POS[1][1]-PLAY_HAND_BUTTON_POS[0][1]))
+    
+    ui_state.playButtonRect = buttonBg
+
+    pos = CenterObjectFromCorners(PLAY_HAND_BUTTON_POS[0], PLAY_HAND_BUTTON_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 def DrawDiscardHandButton():
-    font = pg.font.Font(GLOBAL_FONT, 50)
-    text = font.render("Discard Hand", True, (255, 255, 255), (128, 32, 0))
-    ui_state.discardButtonRect = screen.blit(text, ((DEFAULT_SCREEN_SIZE_X / 2 + 100), 1000))
+
+    font = pg.font.Font(GLOBAL_FONT, 35)
+
+    if(len(selectionManager.selectedCards) > 0 and roundManager.discardsLeft > 0):
+        textSurface = font.render("Discard Hand", True, (156,37,30))
+        buttonBg = pg.draw.rect(screen, (254,76,64), pg.Rect(DISCARD_HAND_BUTTON_POS[0][0],
+                                                        DISCARD_HAND_BUTTON_POS[0][1],
+                                                        DISCARD_HAND_BUTTON_POS[1][0]-DISCARD_HAND_BUTTON_POS[0][0],
+                                                        DISCARD_HAND_BUTTON_POS[1][1]-DISCARD_HAND_BUTTON_POS[0][1]))
+    else:
+        textSurface = font.render("Discard Hand", True, (255,255,255),(84,76,77))
+        buttonBg = pg.draw.rect(screen, (84,76,77), pg.Rect(DISCARD_HAND_BUTTON_POS[0][0],
+                                                        DISCARD_HAND_BUTTON_POS[0][1],
+                                                        DISCARD_HAND_BUTTON_POS[1][0]-DISCARD_HAND_BUTTON_POS[0][0],
+                                                        DISCARD_HAND_BUTTON_POS[1][1]-DISCARD_HAND_BUTTON_POS[0][1]))
+    
+    ui_state.discardButtonRect = buttonBg
+    
+    pos = CenterObjectFromCorners(DISCARD_HAND_BUTTON_POS[0], DISCARD_HAND_BUTTON_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 
 def CheckForButtonsPress():
     mouse_pos = pg.mouse.get_pos()
@@ -230,6 +312,8 @@ def CheckForButtonsPress():
 # ----------------------------
 def DrawToInternalScreen(_inRound):
     screen.fill((27, 112, 50))
+    bannerImg = pg.image.load("resources/textures/banner.png")
+    screen.blit(bannerImg, (0,0))
     DrawJokers()
     DrawFloatingTexts()
 
@@ -237,7 +321,7 @@ def DrawToInternalScreen(_inRound):
         DrawHand()
         DrawChipsDisplay()
         DrawMultDisplay()
-        DrawHandScoreDisplay()
+        #DrawHandScoreDisplay()
         DrawTotalScoreDisplay()
         DrawHandTypeDisplay()
         DrawHandsLeftDisplay()

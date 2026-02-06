@@ -21,7 +21,7 @@ floatingTexts = []
 
 
 class FloatingText:
-    def __init__(self, text, pos, color, timer):
+    def __init__(self, text, pos, color, timer, invertBgAndColor = False):
         self.text = text
 
         self.pos = [pos[0], pos[1]]
@@ -30,3 +30,5 @@ class FloatingText:
         self.color = color
         self.timer = timer
         self.elapsedTime = 0
+
+        self.invertBgAndColor = invertBgAndColor

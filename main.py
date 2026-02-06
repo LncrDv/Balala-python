@@ -2,7 +2,7 @@ from ui import ShowUI
 import jokerManager, deckManager, handManager, selectionManager, roundManager, input, timeManager
 
 #10.66 jokers at 2.5x scale fit in the screen
-jokerManager.generateRandomJokers(5)
+jokerManager.generateRandomJokers(7)
 deckManager.create52CardDeck()
 handManager.DrawFullHand()
 

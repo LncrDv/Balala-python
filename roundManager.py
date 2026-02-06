@@ -1,10 +1,9 @@
 from handManager import DrawXAdditionnalCards, DiscardCards
 import selectionManager
-import helper, timeManager
 import ui_state
 import handTypesManager
 import jokerManager
-import time
+import blindManager
 inRound = True
 
 maxHand = 3
@@ -26,6 +25,10 @@ currentHand_handTypes = None
 currentHand_bestHandType = None
 
 playedHand = []
+
+blind = blindManager.Blind("Small Blind")
+roundScoreReq = blindManager.baseAnteScoreReq[blindManager.currentAnte] * blind.scale
+
 def UpdateScore(_plusChips = 0, _plusMult = 0, _timesMult = 0):
     global currentHand_scoringPlusChips, currentHand_scoringPlusMult, currentHand_scoringTimesMult
     currentHand_scoringPlusChips += _plusChips
