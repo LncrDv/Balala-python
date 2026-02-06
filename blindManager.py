@@ -8,3 +8,7 @@ class Blind:
         self.scale = scale
         self.description = description
         self.modifiers = modifiers
+    @property
+    def scoreReq(self):
+        return self.scale * baseAnteScoreReq[currentAnte]
+

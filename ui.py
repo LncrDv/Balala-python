@@ -2,7 +2,7 @@ import pygame as pg
 from jokers import *
 from cards import *
 from helper import *
-import jokerManager, deckManager, handManager, selectionManager, roundManager, input
+import jokerManager, blindManager, handManager, selectionManager, roundManager, input
 import ui_state
 import timeManager
 
@@ -245,7 +245,13 @@ def DrawDiscardsLeftDisplay():
     pos = CenterObjectFromCorners(DISCARDS_LEFT_DISPLAY_POS[0], DISCARDS_LEFT_DISPLAY_POS[1], textSurface)
     screen.blit(textSurface, pos)
 
+BLIND_REQ_TEXT_POS = [(191,190),(444,190)]
+def DrawBlindRequirement():
+    font = pg.font.Font(GLOBAL_FONT, GLOBAL_FONT_SIZE)
 
+    textSurface = font.render(str(round(blindManager.Blind().scoreReq)), True, (252,70,63))
+    pos = CenterObjectFromCorners(BLIND_REQ_TEXT_POS[0], BLIND_REQ_TEXT_POS[1], textSurface)
+    screen.blit(textSurface, pos)
 # ----------------------------
 # BUTTONS
 # ----------------------------
@@ -328,6 +334,8 @@ def DrawToInternalScreen(_inRound):
         DrawDiscardsLeftDisplay()
         DrawPlayHandButton()
         DrawDiscardHandButton()
+
+        DrawBlindRequirement()
 
         UpdateFloatingDisplays()
 
