@@ -39,7 +39,7 @@ def UpdateFloatingDisplays():
 def DrawFloatingTexts():
 
     for floatingText in ui_state.floatingTexts:
-
+        
         floatingTextFont = pg.font.Font(GLOBAL_FONT, 40)
 
         text_surface = floatingTextFont.render(

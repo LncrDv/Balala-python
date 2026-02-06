@@ -1,5 +1,6 @@
 import pygame as pg
 from cards import Card
+import timeManager
 def GetCardsValue(cards : list[Card]):
     values = []
     for card in cards:
@@ -62,3 +63,22 @@ def EmptyImage(width, height):
     surf = pg.Surface((width, height), pg.SRCALPHA)
     surf.fill((0,0,0,0))
     return surf
+
+
+class WaitForSeconds:
+    def __init__(self, duration):
+        self.duration = duration
+        self.elapsed = 0
+        self.finished = False
+
+    def update(self, deltaTime):
+        if self.finished:
+            return True
+
+        self.elapsed += deltaTime
+        if self.elapsed >= self.duration:
+            self.finished = True
+            return True
+
+        return False
+  

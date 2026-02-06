@@ -14,7 +14,8 @@ def generateRandomJokers(n):
     for joker in equippedJokers:
         print("Equipped Joker : ", joker.name)
 
-def ApplyJoker(joker: Joker):
+def ApplyJoker(slot: int):
+    joker = equippedJokers[slot]
     for modifier, modifierValue in joker.modifiers.items():
 
         if modifier in ("active", "debuffed") and modifierValue is True:
@@ -42,26 +43,30 @@ def ApplyJoker(joker: Joker):
 
         match modifier:
             case "plusMult":
+                if modifierValue == 0:
+                    return
                 roundManager.UpdateScore(_plusMult=modifierValue)
 
                 # Joker-only visual
                 ui_state.floatingTexts.append(
                     ui_state.FloatingText(
                         f"+{modifierValue}",
-                        (equippedJokers.index(joker), 10),
+                        (slot, 10),
                         (255, 0, 0),
                         1
                     )
                 )
 
             case "plusChips":
+                if modifierValue == 0:
+                    return
                 roundManager.UpdateScore(_plusChips=modifierValue)
 
                 # Joker-only visual
                 ui_state.floatingTexts.append(
                     ui_state.FloatingText(
                         f"+{modifierValue}",
-                        (equippedJokers.index(joker), 10),
+                        (slot, 10),
                         (0, 0, 255),
                         1
                     )
@@ -69,5 +74,5 @@ def ApplyJoker(joker: Joker):
 
 def ApplyJokerEffects():
     global equippedJokers
-    for joker in equippedJokers:
-        ApplyJoker(joker)
+    for i in range(len(equippedJokers)):
+        ApplyJoker(i)

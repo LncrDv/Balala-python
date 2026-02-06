@@ -1,6 +1,6 @@
 from handManager import DrawXAdditionnalCards, DiscardCards
 import selectionManager
-from helper import GetCardsValue
+import helper, timeManager
 import ui_state
 import handTypesManager
 import jokerManager
@@ -58,8 +58,26 @@ def CalculateHandScore():
     return handScore
 
 #Play hand logic
+def PlayHand():
+    global playedHand,num_cards_to_draw,totalScore,handsLeft
+    playedHand = selectionManager.selectedCards
+    #Determine hand types in hand
+    global currentHand_bestHandType, currentHand_handTypes
+    currentHand_handTypes = handTypesManager.DetermineHandTypes(selectionManager.selectedCards, selectionManager.CARD_SELECTION_LIMIT)
+    #Determine best hand type from hand types
+    currentHand_bestHandType = handTypesManager.DetermineBestHandType(currentHand_handTypes)
+    
+    #Apply the hand level to score
+    #Calculate Joker impacts
+    jokerManager.ApplyJokerEffects()
+
+    #Calculate Hand Score
+    totalScore += CalculateHandScore()
+    DiscardCards()
+    DrawXAdditionnalCards(num_cards_to_draw)
+    handsLeft -= 1
 def TryToPlayHand():
-    global handsLeft, totalScore
+    global handsLeft, num_cards_to_draw
     if handsLeft <= 0:
         print("No more hands !")
         return
@@ -67,23 +85,7 @@ def TryToPlayHand():
     num_cards_to_draw = len(selectionManager.selectedCards)  # store BEFORE discarding
     if num_cards_to_draw >= 1:
         #print("Playing hand:", [c.name for c in selectionManager.selectedCards])
-        global playedHand
-        playedHand = selectionManager.selectedCards
-        #Determine hand types in hand
-        global currentHand_bestHandType, currentHand_handTypes
-        currentHand_handTypes = handTypesManager.DetermineHandTypes(selectionManager.selectedCards, selectionManager.CARD_SELECTION_LIMIT)
-        #Determine best hand type from hand types
-        currentHand_bestHandType = handTypesManager.DetermineBestHandType(currentHand_handTypes)
-        
-        #Apply the hand level to score
-        #Calculate Joker impacts
-        jokerManager.ApplyJokerEffects()
-        #Calculate Hand Score
-        totalScore += CalculateHandScore()
-        DiscardCards()
-        DrawXAdditionnalCards(num_cards_to_draw)
-        handsLeft -= 1
-        
+        PlayHand()
         #print("Total score : ",totalScore)
     else:
         print("Not enough cards are selected !")
