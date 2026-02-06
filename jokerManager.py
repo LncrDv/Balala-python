@@ -4,15 +4,21 @@ import roundManager
 import ui_state
 
 equippedJokers = []
+askForSeed = False
+if askForSeed:
+    random.seed(input("Seed : "))
 
 def generateRandomJokers(n):
     global equippedJokers
     equippedJokers = []
     for _ in range(n):
-        equippedJokers.append(random.choice(list(collection_jokers.values())))
+        randomJoker = random.choice(list(collection_jokers.values()))
+        while randomJoker in equippedJokers:
+            randomJoker = random.choice(list(collection_jokers.values()))
+        equippedJokers.append(randomJoker)
 
-    for joker in equippedJokers:
-        print("Equipped Joker : ", joker.name)
+    # for joker in equippedJokers:
+    #     print("Equipped Joker : ", joker.name)
 
 def ApplyJoker(slot: int):
     joker = equippedJokers[slot]
@@ -26,8 +32,8 @@ def ApplyJoker(slot: int):
                 match condition:
                     case "requireHandOfType":
                         if conditionValue not in roundManager.currentHand_handTypes:
-                            print(roundManager.currentHand_handTypes)
-                            print(f'''Joker "{joker.name}" did not fulfill condition : {condition} = {conditionValue} !''')
+                            # print(roundManager.currentHand_handTypes)
+                            # print(f'''Joker "{joker.name}" did not fulfill condition : {condition} = {conditionValue} !''')
                             return
                     case "requireCardOfSuit":
 
